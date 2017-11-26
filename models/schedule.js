@@ -7,4 +7,4 @@ var ScheduleSchema = new Schema({
            validate : { validator : Number.isInteger, message : '{VALUE} is not an integer value' }}
 });
 // Export schema definition
-mongoose.model('Schedule', ScheduleSchema);
+module.exports = mongoose.model('Schedule', ScheduleSchema);

@@ -26,10 +26,9 @@ console.log('Server listening on port ' + port);
 // ------------------------- BASIC SERVER CREATED --------------------- //
 
 // Add in schema objects
-var Vehicle = require ('./models/vehicle');
 var Engineer = require ('./models/engineer');
 var Refdate = require ('./models/refdate');
-var sSchedule = require ('./models/schedule');
+var Schedule = require ('./models/schedule');
 
 // Middleware - useful for validation, logging or stopping request from cotinuing in event request is not safe
 router.use(function(req,res,next) {
@@ -43,53 +42,193 @@ router.get('/', function(req,res) {
   res.json({message: 'Welcome to the API'});
 });
 
-// route for vehicle create and retreive (all)
-router.route('/vehicles')
-  .post(function(req,res) {
-    // create record
-    var vehicle = new Vehicle();
-    vehicle.make = req.body.make;
-    vehicle.model = req.body.model;
-    vehicle.colour = req.body.colour;
-    // save record
-    vehicle.save(function(err) {
-      // if error on save  output error otherwise print confirmation note
-      if (err) {
-        res.send(err);
-      }
-      res.json({ message: 'vehicle record created'});
-    });
-  })
+  // route for engineer create and retreive (all)
+  router.route('/engineers')
+    .post(function(req,res) {
+      // create record
+      var engineer = new Engineer();
+      engineer.fname = req.body.fname;
+      engineer.lname = req.body.lname;
+      engineer.gender = req.body.gender;
+      engineer.empid = req.body.empid;
+      engineer.dob = req.body.dob;
+      engineer.start = req.body.start;
 
-  .get(function(req,res) {
-    // Return all vehicle records return error or list of vehicles
-    Vehicle.find(function(err,vehicles) {
-      if (err) {
-        res.send(err);
-      }
-      res.json(vehicles);
-    });
-  });
+      // save record
+      engineer.save(function(err) {
+        // if error on save  output error otherwise print confirmation note
+        if (err) {
+          res.send(err);
+        }
+        res.json({ message: 'engineer record created'});
+      });
+    })
 
-// route for vehicle find by ID (database key)
-router.route('/vehicle/:vehicle_id')
-  .get(function(req,res) {
-    Vehicle.findById(req.params.vehicle_id,function(err,vehicle) {
-      if (err) {
-        res.send(err);
-      }
-      res.json(vehicle);
+    .get(function(req,res) {
+      // Return error or list of engineers
+      Engineer.find(function(err,engineer) {
+        if (err) {
+          res.send(err);
+        }
+        res.json(engineer);
+      });
     });
-  });
 
-// route for vehicle find by ID (database key)
-router.route('/vehicle/make/:make')
-  .get(function(req,res) {
-    // need to match attribute make in d/b to parameter in function; implicit for the _id lookup
-    Vehicle.find({make:req.params.make},function(err,vehicle) {
-      if (err) {
-        res.send(err);
-      }
-      res.json(vehicle);
+  // route for engineer find by ID (database key)
+  router.route('/engineer/:engineer_id')
+    .get(function(req,res) {
+      Engineer.findById(req.params.engineer_id,function(err,engineer) {
+        if (err) {
+          res.send(err);
+        }
+        res.json(engineer);
+      });
     });
-  });
+
+  // route for engineer find by gender
+  router.route('/engineer/gender/:gender')
+    .get(function(req,res) {
+      // need to match attribute make in d/b to parameter in function; implicit for the _id lookup
+      Engineer.find({gender:req.params.gender},function(err,engineer) {
+        if (err) {
+          res.send(err);
+        }
+        res.json(engineer);
+      });
+    });
+
+    // route for engineer find by empid
+    router.route('/engineer/empid/:empid')
+      .get(function(req,res) {
+        Engineer.find({empid:req.params.empid},function(err,engineer) {
+          if (err) {
+            res.send(err);
+          }
+          res.json(engineer);
+        });
+      });
+
+      // route for schedule create and retreive (all)
+      router.route('/schedules')
+        .post(function(req,res) {
+          // create record
+          var schedule = new Schedule();
+          schedule.empid = req.body.empid;
+          schedule.date = req.body.date;
+          schedule.shift = req.body.shift;
+
+          // save record
+          schedule.save(function(err) {
+            // Return error or confirm creation
+            if (err) {
+              res.send(err);
+            }
+            res.json({ message: 'schedule record created'});
+          });
+        })
+
+        .get(function(req,res) {
+          Schedule.find(function(err,schedule) {
+            if (err) {
+              res.send(err);
+            }
+            res.json(schedule);
+          });
+        });
+
+      // route for schedule find by ID (database key)
+      router.route('/schedule/:schedule_id')
+        .get(function(req,res) {
+          Schedule.findById(req.params.schedule_id,function(err,schedule) {
+            if (err) {
+              res.send(err);
+            }
+            res.json(schedule);
+          });
+        });
+
+      // route for schedule find by empid
+      router.route('/schedule/empid/:empid')
+        .get(function(req,res) {
+          Schedule.find({empid:req.params.empid},function(err,schedule) {
+            if (err) {
+              res.send(err);
+            }
+            res.json(schedule);
+          });
+        });
+
+        // route for schedule find by date
+        router.route('/schedule/date/:date')
+          .get(function(req,res) {
+            Schedule.find({date:req.params.date},function(err,schedule) {
+              if (err) {
+                res.send(err);
+              }
+              res.json(schedule);
+            });
+          });
+
+          // route for refdata create and retreive (all)
+          router.route('/refdata')
+            .post(function(req,res) {
+              // create record
+              var refdata = new Refdata();
+              refdata.date = req.body.date;
+              refdata.isholiday = req.body.isholiday;
+              refdata.isweekend = req.body.isweekend;
+              refdata.weeknumber = req.body.weeknumber;
+              refdata.title = req.body.title;
+              
+              // save record
+              refdata.save(function(err) {
+                // Return error or confirm creation
+                if (err) {
+                  res.send(err);
+                }
+                res.json({ message: 'refdata record created'});
+              });
+            })
+
+            // Return error or refdata (error if no records found)
+            .get(function(req,res) {
+              refdata.find(function(err,refdata) {
+                if (err) {
+                  res.send(err);
+                }
+                res.json(refdata);
+              });
+            });
+
+          // route for refdata find by ID (database key)
+          router.route('/refdata/:refdata_id')
+            .get(function(req,res) {
+              Refdata.findById(req.params.refdata_id,function(err,refdata) {
+                if (err) {
+                  res.send(err);
+                }
+                res.json(refdata);
+              });
+            });
+
+          // route for refdata find by weeknumber
+          router.route('/refdata/weeknumber/:weeknumber')
+            .get(function(req,res) {
+              Refdata.find({weeknumber:req.params.weeknumber},function(err,refdata) {
+                if (err) {
+                  res.send(err);
+                }
+                res.json(refdata);
+              });
+            });
+
+            // route for refdata find by isholiday
+            router.route('/refdata/isholiday/:isholiday')
+              .get(function(req,res) {
+                Refdata.find({isholiday:req.params.isholiday},function(err,refdata) {
+                  if (err) {
+                    res.send(err);
+                  }
+                  res.json(refdata);
+                });
+              });

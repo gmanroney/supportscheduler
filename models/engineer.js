@@ -9,4 +9,4 @@ var EngineerSchema = new Schema({
   start: { type: Date, default: Date.now }
 });
 // Export schema definition
-mongoose.model('Engineer', EngineerSchema);
+module.exports = mongoose.model('Engineer', EngineerSchema);

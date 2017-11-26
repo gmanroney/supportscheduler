@@ -4,4 +4,8 @@ DEBUG=swf:* npm start
 # Server restarts if any file changes
 nodemon server.js
 
-
+# load reference data
+1. go to refdata folder
+2. update refdata.csv or refdata.xls and generate refdata.csv
+3. csvtojson refdata.csv > refdata.json
+4. mongoimport --db swf --collection refdata --file refdata.json  --jsonArray  --type json
