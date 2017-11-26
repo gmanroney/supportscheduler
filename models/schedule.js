@@ -1,8 +1,10 @@
-var mongoose = require('mongoose');  
-var scheduleSchema = new mongoose.Schema({  
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
+var ScheduleSchema = new Schema({
   empid: Number,
   date: { type: Date, default: Date.now },
   shift: { type : Number, required : true, unique : true,
            validate : { validator : Number.isInteger, message : '{VALUE} is not an integer value' }}
 });
-mongoose.model('Schedule', scheduleSchema);
+// Export schema definition
+mongoose.model('Schedule', ScheduleSchema);
