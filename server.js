@@ -3,6 +3,9 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
+var moment=require('moment');
+
+//var currentWeekNumber = require('current-week-number');
 
 // Configure app for bodyParser() to let us grab data from the body of POST
 app.use(bodyParser.urlencoded({extended: true}));
@@ -29,6 +32,8 @@ console.log('Server listening on port ' + port);
 var Engineer = require ('./models/engineer');
 var Refdate = require ('./models/refdate');
 var Schedule = require ('./models/schedule');
+var fs = require('fs');
+var vm = require('vm');
 
 // Middleware - useful for validation, logging or stopping request from cotinuing in event request is not safe
 router.use(function(req,res,next) {
@@ -42,193 +47,357 @@ router.get('/', function(req,res) {
   res.json({message: 'Welcome to the API'});
 });
 
-  // route for engineer create and retreive (all)
-  router.route('/engineers')
-    .post(function(req,res) {
-      // create record
-      var engineer = new Engineer();
-      engineer.fname = req.body.fname;
-      engineer.lname = req.body.lname;
-      engineer.gender = req.body.gender;
-      engineer.empid = req.body.empid;
-      engineer.dob = req.body.dob;
-      engineer.start = req.body.start;
+// ------------------------- API for Engineer --------------------- //
+// route for engineer create and retreive (all)
+router.route('/engineers')
+  .post(function(req,res)
+  {
+    // Count number of records
+    Engineer.count({}, function(err, count)
+    {
+      console.log( "Number of docs: ", count );
+      if (count > 10)
+      {
+        console.log("More than 10 engineers now; the 10 most senior engineers will be scheduled" );
+      }
+    });
+    // create record
+    var engineer = new Engineer();
+    engineer.fname = req.body.fname;
+    engineer.lname = req.body.lname;
+    engineer.gender = req.body.gender;
+    engineer.empid = req.body.empid;
+    engineer.dob = req.body.dob;
+    engineer.start = req.body.start;
 
-      // save record
-      engineer.save(function(err) {
-        // if error on save  output error otherwise print confirmation note
-        if (err) {
-          res.send(err);
-        }
-        res.json({ message: 'engineer record created'});
-      });
+    // save record
+    engineer.save(function(err)
+    {
+      // if error on save  output error otherwise print confirmation note
+      if (err)
+      {
+        res.send(err);
+      }
+      res.json({ message: "Engineer record created"});
+    });
+  })
+
+  .get(function(req,res)
+  {
+    Engineer.find(function(err,engineer)
+    {
+      if (err)
+      {
+        res.send(err);
+      }
+      res.json(engineer);
+    });
+  });
+
+// route for engineer find by ID (database key)
+router.route('/engineer/:engineer_id')
+  .get(function(req,res)
+  {
+    Engineer.findById(req.params.engineer_id,function(err,engineer)
+    {
+      if (err)
+      {
+        res.send(err);
+      }
+      res.json(engineer);
+    });
+  });
+
+// route for engineer find by gender
+router.route('/engineer/gender/:gender')
+  .get(function(req,res)
+  {
+    // need to match attribute make in d/b to parameter in function; implicit for the _id lookup
+    Engineer.find({gender:req.params.gender},function(err,engineer)
+    {
+      if (err)
+      {
+        res.send(err);
+      }
+      res.json(engineer);
+    });
+  });
+
+// route for engineer find by empid
+router.route('/engineer/empid/:empid')
+  .get(function(req,res)
+  {
+    Engineer.find({empid:req.params.empid},function(err,engineer)
+    {
+      if (err)
+      {
+        res.send(err);
+      }
+      res.json(engineer);
+    });
+  });
+
+// ------------------------- API for Schedule --------------------- //
+// route for schedule create and retreive (all)
+router.route('/schedules')
+  .post(function(req,res)
+  {
+    // create record
+    var schedule = new Schedule();
+    //schedule.startweek = req.body.startweek;
+
+    //populateCalendar(assignEngineers(),schedule.startweek);
+    populateCalendar(assignEngineers(),1);
+
+    // save record
+    schedule.save(function(err)
+    {
+      // Return error or confirm creation
+      if (err)
+      {
+        res.send(err);
+      }
+      res.json({ message: 'schedule record created'});
+    });
+  })
+  .get(function(req,res)
+  {
+    Schedule.find(function(err,schedule)
+    {
+      if (err)
+      {
+        res.send(err);
+      }
+      res.json(schedule);
+    });
+  })
+  .delete(function(req,res)
+  {
+    if ( currentWeekNumber() %2 == 0 )
+    {
+      deleteafter = currentWeekNumber();
+    } else {
+      deleteafter = currentWeekNumber() + 1;
+    }
+  });
+
+// route for schedule find by ID (database key)
+router.route('/schedule/:schedule_id')
+  .get(function(req,res)
+  {
+    Schedule.findById(req.params.schedule_id,function(err,schedule)
+    {
+      if (err)
+      {
+        res.send(err);
+      }
+      res.json(schedule);
+    });
+  });
+
+// route for schedule find by empid
+router.route('/schedule/empid/:empid')
+  .get(function(req,res)
+  {
+    Schedule.find({empid:req.params.empid},function(err,schedule)
+    {
+      if (err)
+      {
+        res.send(err);
+      }
+      res.json(schedule);
+    });
+  });
+
+// route for schedule find by date
+router.route('/schedule/date/:date')
+  .get(function(req,res)
+  {
+    Schedule.find({date:req.params.date},function(err,schedule)
+    {
+      if (err)
+      {
+        res.send(err);
+      }
+      res.json(schedule);
+    });
+  });
+
+// ------------------------- API for RefData --------------------- //
+// route for refdata create and retreive (all)
+router.route('/refdata')
+  .post(function(req,res)
+  {
+    // create record
+    var refdata = new Refdata();
+    refdata.date = req.body.date;
+    refdata.isholiday = req.body.isholiday;
+    refdata.isweekend = req.body.isweekend;
+    refdata.weeknumber = req.body.weeknumber;
+    refdata.title = req.body.title;
+
+    // save record
+    refdata.save(function(err)
+    {
+      // Return error or confirm creation
+      if (err)
+      {
+        res.send(err);
+      }
+      res.json({ message: 'refdata record created'});
+    });
+  })
+  .get(function(req,res)
+  {
+    // Return error or refdata (error if no records found)
+    refdata.find(function(err,refdata)
+    {
+      if (err)
+      {
+        res.send(err);
+      }
+      res.json(refdata);
+    });
+  });
+
+// route for refdata find by ID (database key)
+router.route('/refdata/:refdata_id')
+  .get(function(req,res)
+  {
+    Refdata.findById(req.params.refdata_id,function(err,refdata)
+    {
+      if (err)
+      {
+        res.send(err);
+      }
+      res.json(refdata);
+    });
+  });
+
+// route for refdata find by weeknumber
+router.route('/refdata/weeknumber/:weeknumber')
+  .get(function(req,res)
+  {
+    Refdata.find({weeknumber:req.params.weeknumber},function(err,refdata)
+    {
+      if (err)
+      {
+        res.send(err);
+      }
+      res.json(refdata);
+    });
+  });
+
+// route for refdata find by isholiday
+router.route('/refdata/isholiday/:isholiday')
+  .get(function(req,res)
+  {
+    Refdata.find({isholiday:req.params.isholiday},function(err,refdata)
+    {
+      if (err)
+      {
+        res.send(err);
+      }
+      res.json(refdata);
+    });
+  });
+
+  // Functions; should be elsewhere but could not get include to work in time for deadline --------------------- //
+
+function pickRandomDay ()
+{
+    // Return value between 0 and 9 for the 10 working days in a fortnight that
+    // engineers need to be scheduled for support. 0=monday of week1, 5=monday of
+    // week 2 etc.
+    return Math.floor(Math.random() * 10);
+}
+
+function pickRandomShift ()
+{
+    // Return value between 0 and 1 for the part of day the engineer will provide
+    // support; 0 = morning and 1 = afternoon
+    return Math.floor(Math.random() * 2);
+}
+
+function assignEngineers ()
+{
+    // create array to hold schedule information and initalize it with blank values
+    var schedule = new Array(10);
+    for (i=0; i<10; i++)
+    {
+      schedule[i] = [ ];
+      for (j=0; j<2; j++ )
+      {
+        schedule[i][j]="";
+      }
+    }
+
+    //var query = Engineer.find();
+    //var empids = query.select('empid');
+    Engineer.find({ empid: 1 },{ _id: 0}).exec(function(err, data)
+    {
+      if(err)
+      {
+        res.json(err)
+      } else {
+        res.json(data)
+      }
     })
+    //var empids = [ "122", "123", "124", "125", "121", "120", "126", "127", "128", "129"];
 
-    .get(function(req,res) {
-      // Return error or list of engineers
-      Engineer.find(function(err,engineer) {
-        if (err) {
-          res.send(err);
+    // loop through employees and assgin 2 half day shifts in the two week period
+    for (var k=0; k < empids.length; k++ )
+    {
+      // set unscheduled to 2 for worker initially
+      unscheduled = 2;
+      while (unscheduled > 0)
+      {
+        // generate random value for day and shift
+        i = pickRandomDay();
+        j = pickRandomShift();
+
+        // if shift is not assigned then add worker and decrease unscheduled by 1
+        if ( schedule[i][j] === "" )
+        {
+          schedule[i][j] = empids[k];
+          console.log(`assigned worker with id ${empids[k]} to day = ${i} shift = ${j}`)
+          unscheduled = unscheduled - 1;
         }
-        res.json(engineer);
-      });
-    });
+      }
+    }
+    // return schedule to calendar populating function
+    return schedule;
+}
 
-  // route for engineer find by ID (database key)
-  router.route('/engineer/:engineer_id')
-    .get(function(req,res) {
-      Engineer.findById(req.params.engineer_id,function(err,engineer) {
-        if (err) {
-          res.send(err);
+function populateCalendar (theschedule,startweek)
+{
+
+    // Initialize array
+    var scheduleDates = [];
+
+    // Get start and end dates of 2-week period to be scheduled
+    var startOfSchedule = moment().startOf('week').week(startweek);
+    var endOfSchedule = moment().endOf('week').week(startweek+1);
+    var day = startOfSchedule;
+
+    // Extract the weekdays; assume engineers have to provide support
+    // Monday-Friday regardless of whether there is a holiday or not
+    while (day <= endOfSchedule) {
+        dayOfWeek = day.toDate().getDay();
+        if (( dayOfWeek > 0 ) && ( dayOfWeek < 6 ))
+        {
+          scheduleDates.push(day.toDate());
         }
-        res.json(engineer);
-      });
-    });
+        day = day.clone().add(1, 'd');
+    }
+    console.log(scheduleDates);
 
-  // route for engineer find by gender
-  router.route('/engineer/gender/:gender')
-    .get(function(req,res) {
-      // need to match attribute make in d/b to parameter in function; implicit for the _id lookup
-      Engineer.find({gender:req.params.gender},function(err,engineer) {
-        if (err) {
-          res.send(err);
-        }
-        res.json(engineer);
-      });
-    });
-
-    // route for engineer find by empid
-    router.route('/engineer/empid/:empid')
-      .get(function(req,res) {
-        Engineer.find({empid:req.params.empid},function(err,engineer) {
-          if (err) {
-            res.send(err);
-          }
-          res.json(engineer);
-        });
-      });
-
-      // route for schedule create and retreive (all)
-      router.route('/schedules')
-        .post(function(req,res) {
-          // create record
-          var schedule = new Schedule();
-          schedule.empid = req.body.empid;
-          schedule.date = req.body.date;
-          schedule.shift = req.body.shift;
-
-          // save record
-          schedule.save(function(err) {
-            // Return error or confirm creation
-            if (err) {
-              res.send(err);
-            }
-            res.json({ message: 'schedule record created'});
-          });
-        })
-
-        .get(function(req,res) {
-          Schedule.find(function(err,schedule) {
-            if (err) {
-              res.send(err);
-            }
-            res.json(schedule);
-          });
-        });
-
-      // route for schedule find by ID (database key)
-      router.route('/schedule/:schedule_id')
-        .get(function(req,res) {
-          Schedule.findById(req.params.schedule_id,function(err,schedule) {
-            if (err) {
-              res.send(err);
-            }
-            res.json(schedule);
-          });
-        });
-
-      // route for schedule find by empid
-      router.route('/schedule/empid/:empid')
-        .get(function(req,res) {
-          Schedule.find({empid:req.params.empid},function(err,schedule) {
-            if (err) {
-              res.send(err);
-            }
-            res.json(schedule);
-          });
-        });
-
-        // route for schedule find by date
-        router.route('/schedule/date/:date')
-          .get(function(req,res) {
-            Schedule.find({date:req.params.date},function(err,schedule) {
-              if (err) {
-                res.send(err);
-              }
-              res.json(schedule);
-            });
-          });
-
-          // route for refdata create and retreive (all)
-          router.route('/refdata')
-            .post(function(req,res) {
-              // create record
-              var refdata = new Refdata();
-              refdata.date = req.body.date;
-              refdata.isholiday = req.body.isholiday;
-              refdata.isweekend = req.body.isweekend;
-              refdata.weeknumber = req.body.weeknumber;
-              refdata.title = req.body.title;
-              
-              // save record
-              refdata.save(function(err) {
-                // Return error or confirm creation
-                if (err) {
-                  res.send(err);
-                }
-                res.json({ message: 'refdata record created'});
-              });
-            })
-
-            // Return error or refdata (error if no records found)
-            .get(function(req,res) {
-              refdata.find(function(err,refdata) {
-                if (err) {
-                  res.send(err);
-                }
-                res.json(refdata);
-              });
-            });
-
-          // route for refdata find by ID (database key)
-          router.route('/refdata/:refdata_id')
-            .get(function(req,res) {
-              Refdata.findById(req.params.refdata_id,function(err,refdata) {
-                if (err) {
-                  res.send(err);
-                }
-                res.json(refdata);
-              });
-            });
-
-          // route for refdata find by weeknumber
-          router.route('/refdata/weeknumber/:weeknumber')
-            .get(function(req,res) {
-              Refdata.find({weeknumber:req.params.weeknumber},function(err,refdata) {
-                if (err) {
-                  res.send(err);
-                }
-                res.json(refdata);
-              });
-            });
-
-            // route for refdata find by isholiday
-            router.route('/refdata/isholiday/:isholiday')
-              .get(function(req,res) {
-                Refdata.find({isholiday:req.params.isholiday},function(err,refdata) {
-                  if (err) {
-                    res.send(err);
-                  }
-                  res.json(refdata);
-                });
-              });
+    // Populate schedule collection with the entries calculated
+    for (i=0; i<10; i++)
+    {
+      for (j=0; j<2; j++ )
+      {
+        console.log(i,j,scheduleDates[i],theschedule[i][j]);
+      }
+    }
+}

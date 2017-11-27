@@ -8,4 +8,8 @@ nodemon server.js
 1. go to refdata folder
 2. update refdata.csv or refdata.xls and generate refdata.csv
 3. csvtojson refdata.csv > refdata.json
-4. mongoimport --db swf --collection refdata --file refdata.json  --jsonArray  --type json
+4. mongoimport --db swf --collection refdata --file refdata.json --jsonArray --type json --fields date.date(),isholiday.boolean(),title.string(),isweekend.boolean(),weeknumber.int32() --columnsHaveTypes --verbose
+mongoimport --db swf --collection refdata --file refdata.json --jsonArray --type json --verbose --columnsHaveTypes
+
+
+4. mongoimport --db swf --collection refdata --file refdata.csv --type csv --fields date.date(),isholiday.boolean(),title.string(),isweekend.boolean(),weeknumber.int32() --columnsHaveTypes --verbose
