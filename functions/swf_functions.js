@@ -139,6 +139,8 @@ function populateCalendar (theschedule,startyear,startweek)
         var dd = scheduleDates[i].getDate();
         if (dd < 10) dd='0'+dd;
         temp['ymd']=yyyy+'-'+mm+'-'+dd;
+        temp['wn']=moment(scheduleDates[i]).weeks();
+        temp['yr']=yyyy;
         calcSchedule.push(temp);
         typeof scheduleDates[i];
         console.log('[sending]',j,scheduleDates[i],theschedule[i][j],temp['ymd']);
