@@ -4,7 +4,7 @@ var app = express();
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var moment=require('moment');
-
+mongoose.set('debug', true);
 //var currentWeekNumber = require('current-week-number');
 
 // Configure app for bodyParser() to let us grab data from the body of POST
@@ -160,15 +160,32 @@ router.route('/schedule/:schedule_year/:schedule_period')
         // Write record to Mongo using upsert; if records for future date already
         // here then overwrite them otherwise insert. This is ok since the period
         // is in the future
-        Schedule.findOneAndUpdate(
-          { date: results[count].date },
+        console.log('[received]',results[count].date,results[count].empid,results[count].shift,results[count].ymd);
+        //Schedule.findOneAndUpdate(
+        //  { ymd: results[count].ymd },
+        //  results[count],
+        //  { upsert: true },
+        //  function (err, doc)
+        //  { // callback
+        //    if (err) return console.log(err);
+        //  }
+        //);
+
+        //new Schedule(results[count]).save(function(err) {
+        //  // Return error or confirm creation
+        //  if (err) {
+        //    res.send(err);
+        //  } else {
+        //    console.log('Record created');
+        //  }
+        //});
+
+        Schedule.findOneAndUpdate (
+          { ymd: results[count].ymd, shift: results[count].shift },
           results[count],
-          { upsert: true, new: true, runValidators: true },
-          function (err, doc)
-          { // callback
-            if (err) return console.log(err);
-          }
-        );
+          {upsert: true, new: true, runValidators: true},
+          function (err,doc) { if (err) res.send(err); }
+        )
       };
     });
     console.log('Schedule POST Completed');
@@ -179,7 +196,8 @@ router.route('/schedule/:schedule_year/:schedule_period')
   {
     console.log('getting1');
 
-    Schedule.find(function(err,schedule)
+    Schedule.find(
+      function(err,schedule)
     {
       if (err)
       {

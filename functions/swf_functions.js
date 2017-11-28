@@ -15,6 +15,18 @@ function pickRandomShift ()
   return Math.floor(Math.random() * 2);
 }
 
+function caclStartPeriod (start)
+{
+  // Return start of period
+  return moment().startOf('week').week(start);
+}
+
+function caclEndPeriod (start)
+{
+  // Return end of period
+  return moment().endOf('week').week(start+1);
+}
+
 function assignEngineers (empids)
 {
   // create array to hold schedule information and initalize it with blank values
@@ -63,8 +75,8 @@ function populateCalendar (theschedule,startyear,startweek)
 
   // Get start and end dates of 2-week period to be scheduled
   startweek = parseInt(startweek);
-  var startOfSchedule = moment().startOf('week').week(startweek);
-  var endOfSchedule = moment().endOf('week').week(startweek+1);
+  var startOfSchedule = caclStartPeriod(startweek);
+  var endOfSchedule = caclEndPeriod(startweek);
   var startOfSchedule_ms = startOfSchedule.toDate().getTime();
   var endOfSchedule_ms = endOfSchedule.toDate().getTime();
   var diffDays = (endOfSchedule_ms - startOfSchedule_ms);
@@ -121,7 +133,15 @@ function populateCalendar (theschedule,startyear,startweek)
         temp['empid']=theschedule[i][j];
         temp['date']=scheduleDates[i];
         temp['shift']=j;
+        var yyyy = scheduleDates[i].getFullYear();
+        var mm = scheduleDates[i].getMonth() + 1; // getMonth() is zero-based
+        if (mm < 10) mm='0'+mm;
+        var dd = scheduleDates[i].getDate();
+        if (dd < 10) dd='0'+dd;
+        temp['ymd']=yyyy+'-'+mm+'-'+dd;
         calcSchedule.push(temp);
+        typeof scheduleDates[i];
+        console.log('[sending]',j,scheduleDates[i],theschedule[i][j],temp['ymd']);
       }
     }
     console.log("Schedule created to insert into database");
@@ -135,5 +155,7 @@ module.exports = {
   pickRandomDay,
   pickRandomShift,
   assignEngineers,
-  populateCalendar
+  populateCalendar,
+  caclStartPeriod,
+  caclEndPeriod
 }
