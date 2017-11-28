@@ -7,6 +7,6 @@ var EngineerSchema = new Schema({
   empid: Number,
   dob: { type: Date, default: Date.now },
   start: { type: Date, default: Date.now }
-});
+}, { versionKey: false });
 // Export schema definition
 module.exports = mongoose.model('Engineer', EngineerSchema);

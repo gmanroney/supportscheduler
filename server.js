@@ -32,8 +32,9 @@ console.log('Server listening on port ' + port);
 var Engineer = require ('./models/engineer');
 var Refdate = require ('./models/refdate');
 var Schedule = require ('./models/schedule');
-var fs = require('fs');
-var vm = require('vm');
+
+// Add in bespoke functions for application
+var SwfFn = require("./functions/swf_functions.js");
 
 // Middleware - useful for validation, logging or stopping request from cotinuing in event request is not safe
 router.use(function(req,res,next) {
@@ -139,29 +140,45 @@ router.route('/engineer/empid/:empid')
 
 // ------------------------- API for Schedule --------------------- //
 // route for schedule create and retreive (all)
-router.route('/schedules')
+router.route('/schedule/:schedule_year/:schedule_period')
+  // generate new schedule for given start week and year
+  // you cannot change periods in the past or if the execution
+  // date is during the period specified
   .post(function(req,res)
   {
     // create record
-    var schedule = new Schedule();
-    //schedule.startweek = req.body.startweek;
-
-    //populateCalendar(assignEngineers(),schedule.startweek);
-    populateCalendar(assignEngineers(),1);
-
-    // save record
-    schedule.save(function(err)
+    var query =  getEngineerIDs();
+    query.exec(function(err,records)
     {
-      // Return error or confirm creation
-      if (err)
+      //var schedule = new Schedule();
+      if(err) return console.log(err);
+      var results = SwfFn.populateCalendar(SwfFn.assignEngineers(records),+
+                    req.params.schedule_year,req.params.schedule_period);
+      if (results.length == 0 ) { console.log('Schedule not generated') };
+      for (var count in results)
       {
-        res.send(err);
-      }
-      res.json({ message: 'schedule record created'});
+        // Write record to Mongo using upsert; if records for future date already
+        // here then overwrite them otherwise insert. This is ok since the period
+        // is in the future
+        Schedule.findOneAndUpdate(
+          { date: results[count].date },
+          results[count],
+          { upsert: true, new: true, runValidators: true },
+          function (err, doc)
+          { // callback
+            if (err) return console.log(err);
+          }
+        );
+      };
     });
+    console.log('Schedule POST Completed');
+    res.json({message: 'Schedule POST Completed'});
   })
+  // list all schedule records
   .get(function(req,res)
   {
+    console.log('getting1');
+
     Schedule.find(function(err,schedule)
     {
       if (err)
@@ -170,6 +187,7 @@ router.route('/schedules')
       }
       res.json(schedule);
     });
+  // delete a schedule record
   })
   .delete(function(req,res)
   {
@@ -302,102 +320,8 @@ router.route('/refdata/isholiday/:isholiday')
     });
   });
 
-  // Functions; should be elsewhere but could not get include to work in time for deadline --------------------- //
-
-function pickRandomDay ()
-{
-    // Return value between 0 and 9 for the 10 working days in a fortnight that
-    // engineers need to be scheduled for support. 0=monday of week1, 5=monday of
-    // week 2 etc.
-    return Math.floor(Math.random() * 10);
-}
-
-function pickRandomShift ()
-{
-    // Return value between 0 and 1 for the part of day the engineer will provide
-    // support; 0 = morning and 1 = afternoon
-    return Math.floor(Math.random() * 2);
-}
-
-function assignEngineers ()
-{
-    // create array to hold schedule information and initalize it with blank values
-    var schedule = new Array(10);
-    for (i=0; i<10; i++)
-    {
-      schedule[i] = [ ];
-      for (j=0; j<2; j++ )
-      {
-        schedule[i][j]="";
-      }
-    }
-
-    //var query = Engineer.find();
-    //var empids = query.select('empid');
-    Engineer.find({ empid: 1 },{ _id: 0}).exec(function(err, data)
-    {
-      if(err)
-      {
-        res.json(err)
-      } else {
-        res.json(data)
-      }
-    })
-    //var empids = [ "122", "123", "124", "125", "121", "120", "126", "127", "128", "129"];
-
-    // loop through employees and assgin 2 half day shifts in the two week period
-    for (var k=0; k < empids.length; k++ )
-    {
-      // set unscheduled to 2 for worker initially
-      unscheduled = 2;
-      while (unscheduled > 0)
-      {
-        // generate random value for day and shift
-        i = pickRandomDay();
-        j = pickRandomShift();
-
-        // if shift is not assigned then add worker and decrease unscheduled by 1
-        if ( schedule[i][j] === "" )
-        {
-          schedule[i][j] = empids[k];
-          console.log(`assigned worker with id ${empids[k]} to day = ${i} shift = ${j}`)
-          unscheduled = unscheduled - 1;
-        }
-      }
-    }
-    // return schedule to calendar populating function
-    return schedule;
-}
-
-function populateCalendar (theschedule,startweek)
-{
-
-    // Initialize array
-    var scheduleDates = [];
-
-    // Get start and end dates of 2-week period to be scheduled
-    var startOfSchedule = moment().startOf('week').week(startweek);
-    var endOfSchedule = moment().endOf('week').week(startweek+1);
-    var day = startOfSchedule;
-
-    // Extract the weekdays; assume engineers have to provide support
-    // Monday-Friday regardless of whether there is a holiday or not
-    while (day <= endOfSchedule) {
-        dayOfWeek = day.toDate().getDay();
-        if (( dayOfWeek > 0 ) && ( dayOfWeek < 6 ))
-        {
-          scheduleDates.push(day.toDate());
-        }
-        day = day.clone().add(1, 'd');
-    }
-    console.log(scheduleDates);
-
-    // Populate schedule collection with the entries calculated
-    for (i=0; i<10; i++)
-    {
-      for (j=0; j<2; j++ )
-      {
-        console.log(i,j,scheduleDates[i],theschedule[i][j]);
-      }
-    }
+// Get Engineer IDs
+function getEngineerIDs(){
+   var query = Engineer.find({},{empid:1, _id:0});
+   return query;
 }

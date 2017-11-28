@@ -15,7 +15,7 @@ function pickRandomShift ()
   return Math.floor(Math.random() * 2);
 }
 
-function assignEngineers ()
+function assignEngineers (empids)
 {
   // create array to hold schedule information and initalize it with blank values
   var schedule = new Array(10);
@@ -28,9 +28,8 @@ function assignEngineers ()
     }
   }
 
-  var empids = [ "122", "123", "124", "125", "121", "120", "126", "127", "128", "129"];
-
   // loop through employees and assgin 2 half day shifts in the two week period
+  //typeof empids;
   for (var k=0; k < empids.length; k++ )
   {
     // set unscheduled to 2 for worker initially
@@ -44,45 +43,97 @@ function assignEngineers ()
       // if shift is not assigned then add worker and decrease unscheduled by 1
       if ( schedule[i][j] === "" )
       {
-        schedule[i][j] = empids[k];
-        console.log(`assigned worker with id ${empids[k]} to day = ${i} shift = ${j}`)
+        schedule[i][j] = empids[k].empid;
+        //console.log(`assigned worker with id ${schedule[i][j]} to day = ${i} shift = ${j}`)
         unscheduled = unscheduled - 1;
       }
     }
   }
   // return schedule to calendar populating function
+  console.log("Engineers assigned to schedule");
   return schedule;
 }
 
-function populateCalendar (theschedule,startweek)
+function populateCalendar (theschedule,startyear,startweek)
 {
 
   // Initialize array
   var scheduleDates = [];
+  var calcSchedule = [];
 
   // Get start and end dates of 2-week period to be scheduled
+  startweek = parseInt(startweek);
   var startOfSchedule = moment().startOf('week').week(startweek);
   var endOfSchedule = moment().endOf('week').week(startweek+1);
+  var startOfSchedule_ms = startOfSchedule.toDate().getTime();
+  var endOfSchedule_ms = endOfSchedule.toDate().getTime();
+  var diffDays = (endOfSchedule_ms - startOfSchedule_ms);
+  var diffDays = Math.round(Math.abs(diffDays/86400000));
   var day = startOfSchedule;
+  var genScheduleFlag = true;
+  var todayDate = Date.now();
+
+  console.log(startOfSchedule_ms,endOfSchedule_ms,todayDate,diffDays);
+
+  // Do not generate schedule if in the past
+  if ( todayDate > endOfSchedule_ms )
+  {
+    console.log('Schedule period requested in past. Not generated');
+    genScheduleFlag = false;
+  };
+
+  // Do not generate schedule if today is in the middle of the requested schedule
+  if ((todayDate > startOfSchedule_ms && (todayDate < endOfSchedule_ms )))
+  {
+    console.log('Todays date is during schedule period. Not generated.');
+    genScheduleFlag = false;
+  };
 
   // Extract the weekdays; assume engineers have to provide support
   // Monday-Friday regardless of whether there is a holiday or not
-  while (day <= endOfSchedule) {
-      dayOfWeek = day.toDate().getDay();
-      if (( dayOfWeek > 0 ) && ( dayOfWeek < 6 ))
-      {
-        scheduleDates.push(day.toDate());
-      }
-      day = day.clone().add(1, 'd');
-  }
-  console.log(scheduleDates);
-
-  // Populate schedule collection with the entries calculated
-  for (i=0; i<10; i++)
+  weekDayCount = 0;
+  while (day <= endOfSchedule)
   {
-    for (j=0; j<2; j++ )
+    dayOfWeek = day.toDate().getDay();
+    if (( dayOfWeek > 0 ) && ( dayOfWeek < 6 ))
     {
-      console.log(i,j,scheduleDates[i],theschedule[i][j]);
+      scheduleDates.push(day.toDate());
+      weekDayCount++;
     }
+    day = day.clone().add(1, 'd');
   }
+
+  // Do not generate schedule if today is in the middle of the requested schedule
+  if ( weekDayCount < 10 )
+  {
+    console.log('Less than 10 working days in period. Not generated.');
+    genScheduleFlag = false;
+  };
+
+  if ( genScheduleFlag )
+  {
+    // Populate schedule collection with the entries calculated
+    for (i=0; i<10; i++)
+    {
+      for (j=0; j<2; j++ )
+      {
+        var temp = {};
+        temp['empid']=theschedule[i][j];
+        temp['date']=scheduleDates[i];
+        temp['shift']=j;
+        calcSchedule.push(temp);
+      }
+    }
+    console.log("Schedule created to insert into database");
+  }
+
+  // Return JSON object containing schedule for population into database
+  return calcSchedule;
+}
+
+module.exports = {
+  pickRandomDay,
+  pickRandomShift,
+  assignEngineers,
+  populateCalendar
 }
