@@ -1,9 +1,0 @@
-var swf = angular.module('swf', []);
-
-function mainController($scope, $http) {
-  $scope.message = 'hello';
-  $scope.updateMessage = function(message)
-  {
-    $scope.message = message;
-  };
-};
