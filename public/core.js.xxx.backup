@@ -1,0 +1,43 @@
+// public/core.js
+var swf = angular.module('swf', []);
+
+function mainController($scope, $http) {
+    $scope.formData = {};
+
+    // when landing on the page, get all engineers and show them
+    $http.get('/api/engineers')
+        .success(function(data) {
+            $scope.engineers = data;
+            console.log('ddddd');
+            console.log(data);
+        })
+        .error(function(data) {
+            console.log('Error: ' + data);
+        });
+
+    // create an engineer
+    $scope.createEngineer = function() {
+        $http.post('/api/engineers', $scope.formData)
+            .success(function(data) {
+                $scope.formData = {}; // clear the form so our user is ready to enter another
+                $scope.engineers = data;
+                console.log(data);
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+            });
+    };
+
+    // delete a engineer
+    $scope.deleteEngineer = function(id) {
+        $http.delete('/api/engineer/empid/' + id)
+            .success(function(data) {
+                $scope.engineers = data;
+                console.log(data);
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+            });
+    };
+
+}

@@ -1,0 +1,76 @@
+<!doctype html>
+
+<!-- ASSIGN OUR ANGULAR MODULE -->
+<html ng-app="swof">
+<head>
+	<!-- META -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1"><!-- Optimize mobile viewport -->
+
+	<title>swof</title>
+
+  <link rel="stylesheet" href="../css/normalize.css">
+  <link rel="stylesheet" href="../css/skeleton.css">
+
+  <link rel="icon" type="image/png" href="../images/favicon.png">
+
+  <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+
+	<!-- SPELLS -->
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script><!-- load angular -->
+	<script src="../core.js"></script>
+
+</head>
+<!-- SET THE CONTROLLER AND GET ALL TODOS WITH INITIALIZE FUNCTION -->
+<body ng-controller="scheduleController">
+	<div class="container">
+    <div class="row">
+      <div class="resizable column" style="margin-top: 5%">
+        <h4>Work! Work! Work! Work! Work!</h4>
+        <p>See when an engineer was, is and will be scheduled in the future</p>
+      </div>
+    </div>
+		<!-- schedule LIST -->
+		<div id="schedule-list" class="row">
+        <!-- LOOP OVER THE schedule IN $scope.schedules -->
+				<div class="container">
+					<li> Sort Type: {{ sortType }}</li>
+					<li> Sort Reverse: {{ sortReverse }}</li>
+					<li> Search Query: {{ searchFish }}</li>
+				</div>
+
+        <table>
+          <tr>
+						<td>
+							<a href="#" ng-click="sortReverse = !sortReverse">
+								EmployeeID
+								<span ng-show="sortType == 'empid'" class="fa fa-caret-down"></span>
+							</a>
+						</td>
+						<td>
+							<a href="#" ng-click="sortType = 'date'">
+								Date
+								<span ng-show="sortType == 'date'" class="fa fa-caret-down"></span>
+							</a>
+						</td>
+						<td>
+							<a href="#" ng-click="sortType = 'shift'">
+								Shift
+								<span ng-show="sortType == 'shift'" class="fa fa-caret-down"></span>
+							</a>
+						</td>
+
+          </tr>
+          <tbody ng-repeat="schedule in schedules | orderBy:sortType:sortReverse">
+            <tr>
+              <td>{{schedule.empid}}</td>
+              <td>{{schedule.date | date: 'dd/MM/yy'}}</td>
+              <td>{{schedule.shift}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+</body>
+</html>

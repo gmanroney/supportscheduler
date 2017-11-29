@@ -134,11 +134,23 @@ router.route('/engineer/gender/:gender')
     });
   });
 
-// get engineer based on employee ID
+// get or delete engineer based on employee ID
 router.route('/engineer/empid/:empid')
   .get(function(req,res)
   {
     Engineer.find({empid:req.params.empid},function(err,engineer)
+    {
+      if (err)
+      {
+        res.send(err);
+      }
+      res.json(engineer);
+    });
+  })
+  
+  .delete(function(req,res)
+  {
+    Engineer.remove({empid:req.params.empid},function(err,engineer)
     {
       if (err)
       {

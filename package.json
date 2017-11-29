@@ -50,6 +50,7 @@
     "nodemon": "^1.12.1"
   },
   "devDependencies": {
+    "@angular/cli": "^1.5.4",
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.6.1"
   }

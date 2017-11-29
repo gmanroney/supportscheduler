@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+  <link rel="stylesheet" href="css/main.css">
+  <title>Support Wheel Of Fame</title>
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0-beta.5/angular.min.js"></script>
+  <script type="text/javascript" src="core.js"></script>
+</head>
+<body>
+  <h1>Support Wheel Of Fortune</h1>
+</body>
+</html>
