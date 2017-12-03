@@ -1,32 +1,65 @@
-var swof = angular.module('swof', []);
+var swof = angular.module('swof', ['ngRoute']);
 
-function engineerController($scope, $http) {
+swof.config(function ($routeProvider) {
 
+    $routeProvider
+
+    .when('/', {
+        templateUrl: 'pages/about.html',
+        controller: 'aboutController'
+    })
+
+    .when('/engineer', {
+        templateUrl: 'pages/engineer.html',
+        controller: 'engineerController'
+    })
+
+    .when('/schedule', {
+        templateUrl: 'pages/schedule.html',
+        controller: 'scheduleController'
+    })
+
+    .when('/help', {
+        templateUrl: 'pages/help.html',
+        controller: 'helpController'
+    })
+});
+
+swof.controller('aboutController', ['$scope', '$log', function($scope, $log) {
+
+    $scope.name = 'About';
+
+}]);
+
+swof.controller('engineerController', ['$scope', '$log', '$http', function($scope, $log, $http) {
+
+    $scope.name = 'Engineer';
     // when landing on the page, get all engineers and show them
     $http.get('/api/engineers')
-        .success(function(data) {
+        .then (function(data) {
             $scope.engineers = data;
             console.log(data);
-        })
-        .error(function(data) {
-            console.log('Error: ' + data);
-        });
-      }
+            console.log($scope);
+        }, function(data) {
+          console.log('Error: ' + data);
+      });
+}]);
 
-function scheduleController($scope, $http)
-{
+swof.controller('scheduleController', ['$scope', '$log', '$http', function($scope, $log, $http) {
 
-    $scope.sortType     = 'empid'; // set the default sort type
-    $scope.sortReverse  = false;  // set the default sort order
-    $scope.searchFish   = 'none';     // set the default search/filter term
-
+    $scope.name = 'Schedule';
     // when landing on the page, get all schedules and show them
     $http.get('/api/schedules/2017/49')
-        .success(function(data) {
+        .then (function(data) {
             $scope.schedules = data;
             console.log(data);
-        })
-        .error(function(data) {
+        }, function(data) {
             console.log('Error: ' + data);
         });
-      }
+}]);
+
+swof.controller('helpController', ['$scope', '$log', function($scope, $log) {
+
+    $scope.name = 'Help';
+
+}]);

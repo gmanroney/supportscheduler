@@ -16,24 +16,19 @@
   <link rel="icon" type="image/png" href="../images/favicon.png">
 
   <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 	<!-- SPELLS -->
-	<script src="//code.angularjs.org/1.6.7/angular.min.js"></script><!-- load angular -->
-	<script src="//code.angularjs.org/1.6.7/angular-route.min.js"></script>
-	<script src="core.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script><!-- load angular -->
+	<script src="../core.js"></script>
 
 </head>
 <!-- SET THE CONTROLLER AND GET ALL TODOS WITH INITIALIZE FUNCTION -->
-<body>
+<body ng-controller="engineerController">
 	<div class="container">
 		<div class="topnav" id="myTopnav">
-			<a class="active" href="#!/">About</a>
-			<a href="#!/engineer">Engineers</a>
-			<a href="#!/schedule">Schedules</a>
-			<a href="#!/help">Help</a>
-		</div>
-		<div ng-view>
+			<a class="active" href="#Engineers">Engineers</a>
+			<a href="#schedules">Schedules</a>
+			<a href="#help">Help</a>
 		</div>
 	</div>
 </body>

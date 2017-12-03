@@ -11,6 +11,7 @@
 
   <link rel="stylesheet" href="../css/normalize.css">
   <link rel="stylesheet" href="../css/skeleton.css">
+	<link rel="stylesheet" href="../css/swof.css">
 
   <link rel="icon" type="image/png" href="../images/favicon.png">
 
@@ -24,10 +25,20 @@
 <!-- SET THE CONTROLLER AND GET ALL TODOS WITH INITIALIZE FUNCTION -->
 <body ng-controller="engineerController">
 	<div class="container">
-    <div class="row">
+		<h1>Engineers</h1>
+		<div class="topnav" id="myTopnav">
+			<a class="active" href="#read">Read</a>
+			<a href="#create">Create</a>
+			<a href="#delete">Delete</a>
+			<a href="#guide">Help!</a>
+		</div>
+	  <div class="row">
       <div class="resizable column" style="margin-top: 5%">
+
+				<h3>Read</h3>
         <h4>A Few Good Engineers</h4>
-        <p>List of engineers who have volunteered to be part of the Support Wheel Of Fame ;-)</p>
+        <div id="jump">List of engineers who have volunteered to be part of the Support Wheel Of Fame ;-)</div>
+				<p>Filter enginers by lastname, firstname and employeeID. Sort engineers by lastname, firstname, employeeID. See shifts worked by engineer in the past. Find out what shifts an engineer is scheduled for in the future.</p>
       </div>
     </div>
 		<!-- ENGINEER LIST -->
@@ -54,7 +65,19 @@
           </tbody>
         </table>
       </div>
+			<hr></hr>
+			<h3 id="#create">Create</h3>
+			<h4>Make A Hero</h4>
+			<div id="create">Add a new engineer to the team who will provide customer support</div>
+			<hr></hr>
+			<h3 >Delete</h3>
+			<h4>Time To Go</h4>
+			<div id="delete">Remove an engineer who will no longer  be able to provide support. Parting is such sweet sorrow!</div>
+			<hr></hr>
+			<h3 id="#guide" >Guide</h3>
+			<h4>What Is The Situation?</h4>
+			<div id="guide">A guide about engineers and how they provide support</div>
+			<p></p>
     </div>
-
 </body>
 </html>

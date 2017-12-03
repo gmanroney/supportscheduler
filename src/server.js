@@ -4,6 +4,7 @@ var app = express();
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var path = require('path');
+var config = require('./config.json')
 
 require('moment');
 mongoose.set('debug', true);
@@ -18,7 +19,7 @@ var port = process.env.PORT || 3000;
 
 // Connecte to MongoDB
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost:27017/swf',{ useMongoClient: true });
+mongoose.connect('mongodb://' + config.mongodb.host + ':' + config.mongodb.port + '/' + config.mongodb.db ,{ useMongoClient: true });
 
 // Add path to static content (HTML homepage) for Single Page Application (SPA) that will serve SWF content
 // Express will by default look for index.html if it is not supplied i.e. localhost:3000
@@ -147,7 +148,7 @@ router.route('/engineer/empid/:empid')
       res.json(engineer);
     });
   })
-  
+
   .delete(function(req,res)
   {
     Engineer.remove({empid:req.params.empid},function(err,engineer)
