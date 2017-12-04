@@ -37,7 +37,6 @@ console.log('Server listening on port ' + port);
 
 // Add in schema objects
 var Engineer = require ('../models/engineer');
-var Refdata = require ('../models/refdate');
 var Schedule = require ('../models/schedule');
 
 // Add in bespoke functions for application
@@ -260,62 +259,6 @@ router.route('/schedule/:date')
         res.send(err);
       }
       res.json(schedule);
-    });
-  });
-
-// ------------------------- API for RefData --------------------- //
-// create reference data records with details of holidays to be used
-// in future to generate reports about when engineers provide support
-// on holiday dates.
-router.route('/refdata')
-
-  .post(function(req,res)
-  {
-    // create record
-    var refdata = new Refdata();
-    refdata.date = req.body.date;
-    refdata.isholiday = req.body.isholiday;
-    refdata.isweekend = req.body.isweekend;
-    refdata.weeknumber = movement(refdata.date).weeks();
-    refdata.title = req.body.title;
-
-    // save record
-    Refdata.save(function(err)
-    {
-      // Return error or confirm creation
-      if (err)
-      {
-        res.send(err);
-      }
-      res.json({ message: 'refdata record created'});
-    });
-  })
-
-  .get(function(req,res)
-  {
-    // Return error or refdata (error if no records found)
-    Refdata.find(function(err,refdata)
-    {
-      if (err)
-      {
-        res.send(err);
-      }
-      res.json(refdata);
-    });
-  });
-
-// get refdata record by mongo ID
-router.route('/refdata/:refdata_id')
-
-  .get(function(req,res)
-  {
-    Refdata.findById(req.params.refdata_id,function(err,refdata)
-    {
-      if (err)
-      {
-        res.send(err);
-      }
-      res.json(refdata);
     });
   });
 

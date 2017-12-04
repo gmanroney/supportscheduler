@@ -1,4 +1,4 @@
-var swof = angular.module('swof', ['ngRoute']);
+var swof = angular.module('swof', ['ngRoute','ngResource']);
 
 swof.config(function ($routeProvider) {
 

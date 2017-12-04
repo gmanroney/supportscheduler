@@ -1,8 +1,6 @@
 <div class="row">
   <div class="resizable column" style="margin-top: 5%">
-
-    <h3>Read</h3>
-    <h4>A Few Good Engineers</h4>
+    <h3>A Few Good Engineers</h3>
     <div id="jump">List of engineers who have volunteered to be part of the Support Wheel Of Fame ;-)</div>
     <p>Filter enginers by lastname, firstname and employeeID. Sort engineers by lastname, firstname, employeeID. See shifts worked by engineer in the past. Find out what shifts an engineer is scheduled for in the future.</p>
   </div>
@@ -19,7 +17,7 @@
         <th>Date Of Birth</th>
         <th>Work Start Date</th>
       </tr>
-      <tbody ng-repeat="engineer in engineers.data">
+      <tbody ng-repeat="engineer in engineers.data | filter:query as filtered">
         <tr>
           <td>{{engineer.empid}}</td>
           <td>{{engineer.fname}}</td>
@@ -27,20 +25,12 @@
           <td>{{engineer.gender}}</td>
           <td>{{engineer.dob | date: 'dd/MM/yy'}}</td>
           <td>{{engineer.start | date: 'dd/MM/yy'}}</td>
+          <td><a ng-click="editEngineer(engineer.id)" class="button" >edit</a></td>
+          <td><a ng-click="deleteEngineer(engineer.id)" class="button button-primary">schedule</a></td>
         </tr>
       </tbody>
     </table>
+    <p ng-cloak>Records returned = {{filtered.length}}</p>
   </div>
   <hr></hr>
-  <h3 id="#create">Create</h3>
-  <h4>Make A Hero</h4>
-  <div id="create">Add a new engineer to the team who will provide customer support</div>
-  <hr></hr>
-  <h3 >Delete</h3>
-  <h4>Time To Go</h4>
-  <div id="delete">Remove an engineer who will no longer  be able to provide support. Parting is such sweet sorrow!</div>
-  <hr></hr>
-  <h3 id="#guide" >Guide</h3>
-  <h4>What Is The Situation?</h4>
-  <div id="guide">A guide about engineers and how they provide support</div>
   <p></p>
