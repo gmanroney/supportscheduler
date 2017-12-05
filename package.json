@@ -35,6 +35,11 @@
   },
   "homepage": "https://github.com/gmanroney/swf#readme",
   "dependencies": {
+    "@angular/animations": "^5.0.5",
+    "@angular/common": "^5.0.5",
+    "@angular/core": "^5.0.5",
+    "@angular/platform-browser": "^5.0.5",
+    "angular-calendar": "^0.22.1",
     "angularjs-datepicker": "^2.1.23",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
