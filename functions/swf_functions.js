@@ -1,25 +1,5 @@
 var moment=require('moment');
 
-function proximityCheck(day,engid)
-{
-  // Set value for lastday and nextday to true
-  lastDay=true;
-  nextDay=true;
-  idnum=empids[engid].empid;
-
-  // check to see if previous or next day contains record for the engineer
-  // if it does return false and try again
-  if ( day === 0 )
-  {
-    var nextDay = ( schedule[day+1][0] == idnum || schedule[day+1][1] == idnum )
-  } else if ( day < 9 ) {
-    var nextDay = ( schedule[day+1][0] == idnum || schedule[day+1][1] == idnum )
-    var lastDay = ( schedule[day-1][0] == idnum || schedule[day-1][1] == idnum )
-  } else {
-    var lastDay = ( schedule[day-1][0] == idnum || schedule[day-1][1] == idnum )
-  }
-}
-
 function pickRandomDay ()
 {
   // Return value between 0 and 9 for the 10 working days in a fortnight that
@@ -78,7 +58,8 @@ function assignEngineers (empids)
       retrycount = 0;
       lastDayPicked = -1;
 
-      // xxx
+      // While there are unscheduled slots and retries less than 20 keep trying
+      // to find a day for the engineer to work
       while (unscheduled > 0 && retrycount < 20 )
       {
         // generate random value for day and shift

@@ -5,7 +5,7 @@
         <form name="scheduleRetrieve">
           <select ng-model="selectedYear" ng-options="x for x in years"></select>
            Start Week (1-51 [odd numbers]):
-          <input ng-model="selectedPeriod" type="number" name="period" min="1" max="51" step="2">
+          <input ng-model="selectedPeriod" type="number" name="getperiod" min="1" max="51" step="2">
           <input type="submit" value="Get" ng-click="getSchedule()">
         </form>
       </div>
@@ -41,7 +41,7 @@
       <form name="scheduleGenerate">
         <select ng-model="selectedYear" ng-options="x for x in years"></select>
          Start Week (1-51 [odd numbers]):
-        <input ng-model="selectedPeriod" type="number" name="period" min="1" max="51" step="2">
+        <input ng-model="selectedPeriod" type="number" name="genperiod" min="1" max="51" step="2">
         <input type="submit" value="Generate" ng-click="genSchedule()">
       </form>
       <hr></hr>
