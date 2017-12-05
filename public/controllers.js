@@ -18,6 +18,16 @@ swof.controller('engineerController', ['$scope', '$log', '$http', function($scop
         }, function(data) {
           $log.error();('Error: ' + data);
       });
+
+      $scope.getEmpidSchedule = function(userid) {
+
+        $http.get('/api/schedules/empid/'+userid)
+              .then (function(data) {
+                $scope.empidSchedules = data;
+                console.log(data);
+              }, function(data) {
+                $log.error();('Error: ' + data);
+              })};
 }]);
 
 swof.controller('scheduleController', ['$scope', '$log', '$http', 'hexafy', function($scope, $log, $http, hexafy) {
@@ -31,7 +41,7 @@ swof.controller('scheduleController', ['$scope', '$log', '$http', 'hexafy', func
 
   $scope.hex = hexafy.myFunc(255);
   // when landing on the page, get all schedules and show them
-  $http.get('/api/schedules/2017/49')
+  $http.get('/api/schedules')
         .then (function(data) {
             $scope.schedules = data;
             console.log(data);
@@ -39,13 +49,30 @@ swof.controller('scheduleController', ['$scope', '$log', '$http', 'hexafy', func
           $log.error();('Error: ' + data);
         });
 
-  $scope.genSchedule = function () {
-    $log.info("Generating schedule");
-  };
+  $scope.getSchedule = function() {
 
-  $scope.getSchedule = function () {
-    $log.info("Retrieving schedule");
-  };
+          $http.get('/api/schedules/'+$scope.selectedYear+'/'+$scope.selectedPeriod)
+          .then (function(data) {
+            $scope.schedules = data;
+            console.log(data);
+          }, function(data) {
+            $log.error();('Error: ' + data);
+          })};
+
+  $scope.genSchedule = function() {
+
+          $http.post('/api/schedules/'+$scope.selectedYear+'/'+$scope.selectedPeriod)
+          .then (function(data) {
+            $scope.schedulegen = data;
+           console.log(data);
+          }, function(data) {
+              $log.error();('Error: ' + data);
+          })};
+  //$scope.getSchedule = function () {
+  //  $log.info("Retrieving schedule");
+  //  console.log($scope);
+  //};
+
 }]);
 
 swof.controller('helpController', ['$scope', '$log', function($scope, $log) {

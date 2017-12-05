@@ -104,7 +104,7 @@ router.route('/engineers')
   });
 
 // get engineer based on mongo ID
-router.route('/engineer/:engineer_id')
+router.route('/engineers/id/:engineer_id')
 
   .get(function(req,res)
   {
@@ -119,7 +119,7 @@ router.route('/engineer/:engineer_id')
   });
 
 // get engineer based on gender
-router.route('/engineer/gender/:gender')
+router.route('/engineers/gender/:gender')
 
   .get(function(req,res)
   {
@@ -135,7 +135,7 @@ router.route('/engineer/gender/:gender')
   });
 
 // get or delete engineer based on employee ID
-router.route('/engineer/empid/:empid')
+router.route('/engineers/:empid')
   .get(function(req,res)
   {
     Engineer.find({empid:req.params.empid},function(err,engineer)
@@ -162,66 +162,23 @@ router.route('/engineer/empid/:empid')
 
 // ------------------------- API for Schedule --------------------- //
 
-// create, get and delete schedule for period in a year
-// - peroiod starts on week schedule_period and extends for 2 weeks
-// - period must be an odd number and includes 1 e.g. 1,3,5,7 etc.
-router.route('/schedules/:schedule_year/:schedule_period')
-
-  .post(function(req,res)
-  {
-    // create record
-    var query =  getEngineerIDs();
-    query.exec(function(err,records)
-    {
-      if(err) return console.log(err);
-      var results = SwfFn.populateCalendar(SwfFn.assignEngineers(records),+
-                    req.params.schedule_year,req.params.schedule_period);
-      if (results.length == 0 ) { console.log('Schedule not generated') };
-      for (var count in results)
-      {
-        // Write record to Mongo using upsert; if records for future date already
-        // here then overwrite them otherwise insert. This is ok since the period
-        // is in the future
-        console.log('[received]',results[count].date,results[count].empid,results[count].shift,results[count].ymd);
-        Schedule.findOneAndUpdate (
-          { ymd: results[count].ymd, shift: results[count].shift },
-          results[count],
-          {upsert: true, new: true, runValidators: true},
-          function (err,doc) { if (err) res.send(err); }
-        )
-      };
-    });
-    console.log('Schedule POST Completed');
-    res.json({message: 'Schedule POST Completed'});
-  })
-
+// get entire schedule
+router.route('/schedules/')
   .get(function(req,res)
   {
-    Schedule.find({wn:{$in:[req.params.schedule_period,parseInt(req.params.schedule_period)+1]}},
-    function(err,schedule)
+    Schedule.find(function(err,schedule)
     {
       if (err)
       {
         res.send(err);
-      };
+      }
       res.json(schedule);
-      console.log('Schedule GET Completed');
+      console.log('Schedule GET (all) Completed');
     });
-  })
-
-  .delete(function(req,res)
-  {
-    Schedule.remove({wn:{$in:[req.params.schedule_period,parseInt(req.params.schedule_period)+1]}},
-    function(err,schedule)
-    {
-      if (err) res.send(err);
-      res.json({message: 'Schedule DELETE Completed'});
-    });
-    //console.log('Schedule GET Completed');
   });
 
 // get schedule based on mongo ID
-router.route('/schedule/:schedule_id')
+router.route('/schedules/id/:schedule_id')
   .get(function(req,res)
   {
     Schedule.findById(req.params.schedule_id,function(err,schedule)
@@ -231,13 +188,15 @@ router.route('/schedule/:schedule_id')
         res.send(err);
       }
       res.json(schedule);
+      console.log('Schedule GET (schedule_id) Completed');
     });
   });
 
-// get engineer based on employee ID
-router.route('/schedule/engineer/:empid')
+// get engineer based on employ ee ID
+router.route('/schedules/empid/:empid')
   .get(function(req,res)
   {
+    console.log(req.params.empid);
     Schedule.find({empid:req.params.empid},function(err,schedule)
     {
       if (err)
@@ -245,11 +204,12 @@ router.route('/schedule/engineer/:empid')
         res.send(err);
       }
       res.json(schedule);
+      console.log('Schedule GET (empid) Completed');
     });
   });
 
 // get schedule based on date
-router.route('/schedule/:date')
+router.route('/schedules/date/:date')
   .get(function(req,res)
   {
     Schedule.find({date:req.params.date},function(err,schedule)
@@ -259,8 +219,70 @@ router.route('/schedule/:date')
         res.send(err);
       }
       res.json(schedule);
+      console.log('Schedule GET (date) Completed');
     });
   });
+
+
+  // create, get and delete schedule for period in a year
+  // - peroiod starts on week schedule_period and extends for 2 weeks
+  // - period must be an odd number and includes 1 e.g. 1,3,5,7 etc.
+
+  router.route('/schedules/:schedule_year/:schedule_period')
+
+    .post(function(req,res)
+    {
+      // create record
+      var query =  getEngineerIDs();
+      query.exec(function(err,records)
+      {
+        if(err) return console.log(err);
+        var results = SwfFn.populateCalendar(SwfFn.assignEngineers(records),+
+                      req.params.schedule_year,req.params.schedule_period);
+        if (results.length == 0 ) { console.log('Schedule not generated') };
+        for (var count in results)
+        {
+          // Write record to Mongo using upsert; if records for future date already
+          // here then overwrite them otherwise insert. This is ok since the period
+          // is in the future
+          console.log('[received]',results[count].date,results[count].empid,results[count].shift,results[count].ymd);
+          Schedule.findOneAndUpdate (
+            { ymd: results[count].ymd, shift: results[count].shift },
+            results[count],
+            {upsert: true, new: true, runValidators: true},
+            function (err,doc) { if (err) res.send(err); }
+          )
+        };
+      });
+      console.log('Schedule POST(year/weekstart) Completed');
+      res.json({message: 'Schedule POST (year/weekstart) Completed'});
+    })
+
+    .get(function(req,res)
+    {
+      Schedule.find( { $and: [ { yr: req.params.schedule_year },{ wn:{$in:[req.params.schedule_period,parseInt(req.params.schedule_period)+1]}}]},
+      function(err,schedule)
+      {
+        if (err)
+        {
+          res.send(err);
+        };
+        res.json(schedule);
+        console.log('Schedule GET(year/weekstart) Completed');
+      });
+    })
+
+    .delete(function(req,res)
+    {
+      Schedule.remove( { $and: [ { yr: req.params.schedule_year },{ wn:{$in:[req.params.schedule_period,parseInt(req.params.schedule_period)+1]}}]},
+      function(err,schedule)
+      {
+        if (err) res.send(err);
+        console.log('Schedule DELETE(year/weekstart) Completed');
+        res.json({message: 'Schedule DELETE(year/weekstart) Completed'});
+      });
+      //console.log('Schedule GET Completed');
+    });
 
 // Get Engineer IDs
 function getEngineerIDs(){

@@ -4,10 +4,9 @@
         <p>See when an engineer was, is and will be scheduled in the future. The default schedule provided is for the current period. You can select an alternative period by selecting the year and period number below.</p>
         <form name="scheduleRetrieve">
           <select ng-model="selectedYear" ng-options="x for x in years"></select>
-           Period (1-26):
-          <input ng-model="selectedPeriod" type="number" name="period" min="1" max="26">
-          <br></br>
-          <input type="submit" value="Retrieve" ng-click="getSchedule()">
+           Start Week (1-51 [odd numbers]):
+          <input ng-model="selectedPeriod" type="number" name="period" min="1" max="51" step="2">
+          <input type="submit" value="Get" ng-click="getSchedule()">
         </form>
       </div>
     </div>
@@ -37,9 +36,8 @@
       <div id="create">Select year and week start period to generate a schedule for future support slots. Previously generated values will be lost. You cannot generate  a scheule for periods in the past or the current period we are in.</div>
       <form name="scheduleGenerate">
         <select ng-model="selectedYear" ng-options="x for x in years"></select>
-         Period (1-26):
-        <input ng-model="selectedPeriod" type="number" name="period" min="1" max="26">
-        <br></br>
+         Start Week (1-51 [odd numbers]):
+        <input ng-model="selectedPeriod" type="number" name="period" min="1" max="51" step="2">
         <input type="submit" value="Generate" ng-click="genSchedule()">
       </form>
       <hr></hr>

@@ -13,8 +13,6 @@
         <th>Employee ID</th>
         <th>First Name</th>
         <th>Last Name</th>
-        <th>Gender</th>
-        <th>Date Of Birth</th>
         <th>Work Start Date</th>
       </tr>
       <tbody ng-repeat="engineer in engineers.data | filter:query as filtered">
@@ -22,11 +20,8 @@
           <td>{{engineer.empid}}</td>
           <td>{{engineer.fname}}</td>
           <td>{{engineer.lname}}</td>
-          <td>{{engineer.gender}}</td>
-          <td>{{engineer.dob | date: 'dd/MM/yy'}}</td>
           <td>{{engineer.start | date: 'dd/MM/yy'}}</td>
-          <td><a ng-click="editEngineer(engineer.id)" class="button" >edit</a></td>
-          <td><a ng-click="deleteEngineer(engineer.id)" class="button button-primary">schedule</a></td>
+          <td><a ng-click="getEmpidSchedule(engineer.empid)" class="button button-primary">schedule</a></td>
         </tr>
       </tbody>
     </table>

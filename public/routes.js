@@ -17,8 +17,8 @@ swof.config(function ($routeProvider) {
         controller: 'scheduleController'
     })
 
-    .when('/help', {
-        templateUrl: 'pages/help.html',
+    .when('/status', {
+        templateUrl: 'pages/status.html',
         controller: 'helpController'
     })
 });

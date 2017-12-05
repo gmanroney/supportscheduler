@@ -15,16 +15,16 @@ function pickRandomShift ()
   return Math.floor(Math.random() * 2);
 }
 
-function caclStartPeriod (start)
+function caclStartPeriod (startw,starty)
 {
   // Return start of period
-  return moment().startOf('week').week(start);
+  return moment(starty+'-01-01').startOf('week').week(startw);
 }
 
-function caclEndPeriod (start)
+function caclEndPeriod (startw,starty)
 {
   // Return end of period
-  return moment().endOf('week').week(start+1);
+  return moment(starty+'-01-01').endOf('week').week(startw+1);
 }
 
 function assignEngineers (empids)
@@ -56,13 +56,11 @@ function assignEngineers (empids)
       if ( schedule[i][j] === "" )
       {
         schedule[i][j] = empids[k].empid;
-        //console.log(`assigned worker with id ${schedule[i][j]} to day = ${i} shift = ${j}`)
         unscheduled = unscheduled - 1;
       }
     }
   }
   // return schedule to calendar populating function
-  console.log("Engineers assigned to schedule");
   return schedule;
 }
 
@@ -75,8 +73,8 @@ function populateCalendar (theschedule,startyear,startweek)
 
   // Get start and end dates of 2-week period to be scheduled
   startweek = parseInt(startweek);
-  var startOfSchedule = caclStartPeriod(startweek);
-  var endOfSchedule = caclEndPeriod(startweek);
+  var startOfSchedule = caclStartPeriod(startweek,startyear);
+  var endOfSchedule = caclEndPeriod(startweek,startyear);
   var startOfSchedule_ms = startOfSchedule.toDate().getTime();
   var endOfSchedule_ms = endOfSchedule.toDate().getTime();
   var diffDays = (endOfSchedule_ms - startOfSchedule_ms);
@@ -84,8 +82,6 @@ function populateCalendar (theschedule,startyear,startweek)
   var day = startOfSchedule;
   var genScheduleFlag = true;
   var todayDate = Date.now();
-
-  console.log(startOfSchedule_ms,endOfSchedule_ms,todayDate,diffDays);
 
   // Do not generate schedule if in the past
   if ( todayDate > endOfSchedule_ms )
@@ -143,10 +139,8 @@ function populateCalendar (theschedule,startyear,startweek)
         temp['yr']=yyyy;
         calcSchedule.push(temp);
         typeof scheduleDates[i];
-        console.log('[sending]',j,scheduleDates[i],theschedule[i][j],temp['ymd']);
       }
     }
-    console.log("Schedule created to insert into database");
   }
 
   // Return JSON object containing schedule for population into database
