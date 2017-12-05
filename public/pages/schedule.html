@@ -13,13 +13,17 @@
 		<!-- schedule LIST -->
 		<div id="schedule-list" class="row">
         <!-- LOOP OVER THE schedule IN $scope.schedules -->
-        <table class="inline">
+        <table ng-cloak class="inline">
+          <span class="col-md-3">
+            <i>Search Schedules :</i>
+    			<input type="text" class="form-control ng-valid ng-dirty" ng-model="searchKeyword">
+    			</span>
           <tr>
-            <th>Employee ID</th>
-            <th>Date</th>
+            <th><a href="" ng-click="orderByField='empid'; reverseSort = !reverseSort">Employee ID</a></th>
+            <th><a href="" ng-click="orderByField='date'; reverseSort = !reverseSort">Date</a></th>
             <th>Shift</th>
           </tr>
-          <tbody ng-repeat="schedule in schedules.data | filter:query as filtered">
+          <tbody ng-repeat="schedule in (filtered = (schedules.data | filter: query | filter: searchKeyword | orderBy: orderByField:reverseSort))">
             <tr ng-cloak>
               <td>{{schedule.empid}}</td>
               <td>{{schedule.date | date: 'dd/MM/yy'}}</td>

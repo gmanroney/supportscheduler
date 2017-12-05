@@ -9,23 +9,29 @@
 <div id="engineer-list" class="row">
     <!-- LOOP OVER THE engineer IN $scope.engineers -->
     <table>
+      <span class="col-md-3">
+        <i>Search Engineers :</i>
+			<input type="text" class="form-control ng-valid ng-dirty" ng-model="searchKeyword">
+			</span>
       <tr>
-        <th>Employee ID</th>
+        <th><a href="" ng-click="orderByField='empid'; reverseSort = !reverseSort">Employee ID</a>
+		</th>
         <th>First Name</th>
         <th>Last Name</th>
         <th>Work Start Date</th>
       </tr>
-      <tbody ng-repeat="engineer in engineers.data | filter:query as filtered">
+      <tbody ng-repeat="engineer in (filtered = (engineers.data | filter: query | filter: searchKeyword | orderBy: orderByField:reverseSort))">
         <tr>
           <td>{{engineer.empid}}</td>
           <td>{{engineer.fname}}</td>
           <td>{{engineer.lname}}</td>
           <td>{{engineer.start | date: 'dd/MM/yy'}}</td>
-          <td><a ng-click="getEmpidSchedule(engineer.empid)" class="button button-primary">schedule</a></td>
+          <td><a href="#!/engineerSchedule" ngmodel=empschedid ng-click="getEmpidSchedule(engineer.empid)" class="button button-primary">schedule</a></td>
         </tr>
       </tbody>
     </table>
     <p ng-cloak>Records returned = {{filtered.length}}</p>
+
   </div>
   <hr></hr>
   <p></p>

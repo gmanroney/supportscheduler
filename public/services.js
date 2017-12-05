@@ -1,5 +1,3 @@
-swof.service('hexafy', function() {
-    this.myFunc = function (x) {
-        return x.toString(16);
-    }
+swof.service('engSchedService', function() {
+  this.empschedid="999";
 });
