@@ -33,6 +33,7 @@ app.use('/api',router);
 app.listen(port);
 console.log('Server listening on port ' + port);
 
+
 // ------------------------- BASIC SERVER CREATED --------------------- //
 
 // Add in schema objects

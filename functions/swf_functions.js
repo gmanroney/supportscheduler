@@ -51,37 +51,100 @@ function assignEngineers (empids)
 {
   // create array to hold schedule information and initalize it with blank values
   var schedule = new Array(10);
-  for (i=0; i<10; i++)
-  {
-    schedule[i] = [ ];
-    for (j=0; j<2; j++ )
-    {
-      schedule[i][j]="";
-    }
-  }
 
   // loop through employees and assgin 2 half day shifts in the two week period
-  //typeof empids;
-  for (var k=0; k < empids.length; k++ )
+  retryloop = true;
+  while (retryloop)
   {
-    // set unscheduled to 2 for worker initially
-    unscheduled = 2;
-    while (unscheduled > 0)
+    // Initialize the array & populated count
+    for (i=0; i<10; i++)
     {
-      // generate random value for day and shift
-      i = pickRandomDay();
-      j = pickRandomShift();
-
-      // if shift is not assigned then add worker and decrease unscheduled by 1
-      if ( schedule[i][j] === "" )
+      schedule[i] = [ ];
+      for (j=0; j<2; j++ )
       {
-        // check to see if engineer has been assigned on previous day
-        // take into account special case of first monday (0) and last friday (9)
-        schedule[i][j] = empids[k].empid;
-        unscheduled = unscheduled - 1;          
+        schedule[i][j]="";
       }
     }
-  }
+    populated = 0;
+
+    // try to schedule engineers to slots in 2 week cycle according to business rules
+    // stating that they only do 0.5 days a day, have at least 1 day in between shifts
+    // and only do 1.0  days in a 10 day period (2 weeks, Monday to Friday)
+    console.log("Trying to schedule");
+    for (var k=0; k < empids.length; k++ )
+    {
+      // set unscheduled to 2 for worker initially
+      unscheduled = 2;
+      retrycount = 0;
+      lastDayPicked = -1;
+
+      // xxx
+      while (unscheduled > 0 && retrycount < 20 )
+      {
+        // generate random value for day and shift
+        i = pickRandomDay();
+        j = pickRandomShift();
+        retrycount = retrycount + 1;
+        console.log("zero",i,j,k,unscheduled,populated,retrycount);
+
+        // if shift is not assigned then check to see if engineer can be added
+        if ( schedule[i][j] == "" )
+        {
+          // Initialise logical for yesterday and today
+          var nextDay=false;
+          var lastDay=false;
+
+          if ( unscheduled == 1 && lastDayPicked == i )
+          {
+             nextDay=true;
+             lastDay=true;
+          };
+
+          // check to see if previous or next day contains record for the engineer
+          // if it does return false and try again
+          if ( i == 0 )
+          {
+            var nextDay = ( schedule[i+1][0] == empids[k].empid || schedule[i+1][1] == empids[k].empid );
+            console.log("one");
+          } else if ( i > 0 && i < 9 )
+          {
+            var nextDay = ( schedule[i+1][0] == empids[k].empid || schedule[i+1][1] == empids[k].empid );
+            var lastDay = ( schedule[i-1][0] == empids[k].empid || schedule[i-1][1] == empids[k].empid );
+            console.log("two",lastDay,nextDay);
+          } else
+          {
+            var lastDay = ( schedule[i-1][0] == empids[k].empid || schedule[i-1][1] == empids[k].empid );
+            console.log("three",lastDay,nextDay);
+          };
+
+          // if last day picked same as current random day chosen also a fail
+        //  if ( i = lastDayPicked)
+        //  {
+        //    nextDay=true;
+          //  lastDay=true;
+          //};
+
+          // if engineer has not been assigned to yesterday or today then add to schedule
+          if ( ! nextDay && ! lastDay )
+          {
+            console.log("four",lastDay,nextDay);
+            schedule[i][j] = empids[k].empid;
+            unscheduled = unscheduled - 1;
+            populated = populated + 1;
+            lastDayPicked = i;
+
+            // if all slots are now scheduled then exit the loop by setting retryschedule to false
+            retryloop = ( populated ==  20 ) ? false : true;
+          };
+
+        };
+
+      };
+
+    };
+
+  };
+
   // return schedule to calendar populating function
   return schedule;
 }
