@@ -4,7 +4,7 @@ var app = express();
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var path = require('path');
-var config = require('./config.json')
+var config = require('./config.json');
 
 require('moment');
 mongoose.set('debug', true);
@@ -240,7 +240,7 @@ router.route('/schedules/date/:date')
         if(err) return console.log(err);
         var results = SwfFn.populateCalendar(SwfFn.assignEngineers(records),+
                       req.params.schedule_year,req.params.schedule_period);
-        if (results.length == 0 ) { console.log('Schedule not generated') };
+        if (results.length == 0 ) { console.log('Schedule not generated'); }
         for (var count in results)
         {
           // Write record to Mongo using upsert; if records for future date already
@@ -252,8 +252,8 @@ router.route('/schedules/date/:date')
             results[count],
             {upsert: true, new: true, runValidators: true},
             function (err,doc) { if (err) res.send(err); }
-          )
-        };
+          );
+        }
       });
       console.log('Schedule POST(year/weekstart) Completed');
       res.json({message: 'Schedule POST (year/weekstart) Completed'});
@@ -267,7 +267,7 @@ router.route('/schedules/date/:date')
         if (err)
         {
           res.send(err);
-        };
+        }
         res.json(schedule);
         console.log('Schedule GET(year/weekstart) Completed');
       });
