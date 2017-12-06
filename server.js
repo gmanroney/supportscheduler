@@ -250,7 +250,7 @@ router.route('/schedules/date/:date')
             { ymd: results[count].ymd, shift: results[count].shift },
             results[count],
             {upsert: true, new: true, runValidators: true},
-            function (err,doc) { if (err) res.send(err); }
+            catchError(err,res) }
           )
         };
       });
@@ -283,6 +283,12 @@ router.route('/schedules/date/:date')
       });
       //console.log('Schedule GET Completed');
     });
+
+// Error Function
+var catchError = function (err,res)
+{
+  if (err) res.send(err);
+}
 
 // Get Engineer IDs
 function getEngineerIDs(){

@@ -30,7 +30,7 @@ function caclEndPeriod (startw,starty)
 function assignEngineers (empids)
 {
   // Main function to determine schedule. It is possible to fail to get a working schedule
-  // so the application will 'retry' if it is not possible to get all slots to comply 
+  // so the application will 'retry' if it is not possible to get all slots to comply
   // with business rules.
 
   // create array to hold schedule information and initalize it with blank values
@@ -83,31 +83,24 @@ function assignEngineers (empids)
           {
              nextDay=true;
              lastDay=true;
-          };
+          }
 
           // check to see if previous or next day contains record for the engineer
           // if it does return false and try again
           if ( i == 0 )
           {
-            var nextDay = ( schedule[i+1][0] == empids[k].empid || schedule[i+1][1] == empids[k].empid );
+            nextDay = ( schedule[i+1][0] == empids[k].empid || schedule[i+1][1] == empids[k].empid );
             console.log("one");
           } else if ( i > 0 && i < 9 )
           {
-            var nextDay = ( schedule[i+1][0] == empids[k].empid || schedule[i+1][1] == empids[k].empid );
-            var lastDay = ( schedule[i-1][0] == empids[k].empid || schedule[i-1][1] == empids[k].empid );
+            nextDay = ( schedule[i+1][0] == empids[k].empid || schedule[i+1][1] == empids[k].empid );
+            lastDay = ( schedule[i-1][0] == empids[k].empid || schedule[i-1][1] == empids[k].empid );
             console.log("two",lastDay,nextDay);
           } else
           {
-            var lastDay = ( schedule[i-1][0] == empids[k].empid || schedule[i-1][1] == empids[k].empid );
+            lastDay = ( schedule[i-1][0] == empids[k].empid || schedule[i-1][1] == empids[k].empid );
             console.log("three",lastDay,nextDay);
-          };
-
-          // if last day picked same as current random day chosen also a fail
-        //  if ( i = lastDayPicked)
-        //  {
-        //    nextDay=true;
-          //  lastDay=true;
-          //};
+          }
 
           // if engineer has not been assigned to yesterday or today then add to schedule
           if ( ! nextDay && ! lastDay )
@@ -120,15 +113,15 @@ function assignEngineers (empids)
 
             // if all slots are now scheduled then exit the loop by setting retryschedule to false
             retryloop = ( populated ==  20 ) ? false : true;
-          };
+          }
 
-        };
+        }
 
-      };
+      }
 
-    };
+    }
 
-  };
+  }
 
   // return schedule to calendar populating function
   return schedule;
@@ -147,8 +140,12 @@ function populateCalendar (theschedule,startyear,startweek)
   var endOfSchedule = caclEndPeriod(startweek,startyear);
   var startOfSchedule_ms = startOfSchedule.toDate().getTime();
   var endOfSchedule_ms = endOfSchedule.toDate().getTime();
-  var diffDays = (endOfSchedule_ms - startOfSchedule_ms);
-  var diffDays = Math.round(Math.abs(diffDays/86400000));
+
+  // Difference in days
+  var diffDays="";
+  diffDays = (endOfSchedule_ms - startOfSchedule_ms);
+  diffDays = Math.round(Math.abs(diffDays/86400000));
+
   var day = startOfSchedule;
   var genScheduleFlag = true;
   var todayDate = Date.now();
@@ -158,14 +155,14 @@ function populateCalendar (theschedule,startyear,startweek)
   {
     console.log('Schedule period requested in past. Not generated');
     genScheduleFlag = false;
-  };
+  }
 
   // Do not generate schedule if today is in the middle of the requested schedule
   if ((todayDate > startOfSchedule_ms && (todayDate < endOfSchedule_ms )))
   {
     console.log('Todays date is during schedule period. Not generated.');
     genScheduleFlag = false;
-  };
+  }
 
   // Extract the weekdays; assume engineers have to provide support
   // Monday-Friday regardless of whether there is a holiday or not
@@ -186,7 +183,7 @@ function populateCalendar (theschedule,startyear,startweek)
   {
     console.log('Less than 10 working days in period. Not generated.');
     genScheduleFlag = false;
-  };
+  }
 
   if ( genScheduleFlag )
   {
