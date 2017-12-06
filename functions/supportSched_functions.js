@@ -29,6 +29,10 @@ function caclEndPeriod (startw,starty)
 
 function assignEngineers (empids)
 {
+  // Main function to determine schedule. It is possible to fail to get a working schedule
+  // so the application will 'retry' if it is not possible to get all slots to comply 
+  // with business rules.
+
   // create array to hold schedule information and initalize it with blank values
   var schedule = new Array(10);
 

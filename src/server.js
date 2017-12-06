@@ -41,7 +41,7 @@ var Engineer = require ('../models/engineer');
 var Schedule = require ('../models/schedule');
 
 // Add in bespoke functions for application
-var SwfFn = require("../functions/swf_functions.js");
+var SwfFn = require("../functions/supportSched_functions.js");
 
 // Middleware - useful for validation, logging or stopping request from cotinuing in event request is not safe
 router.use(function(req,res,next) {
