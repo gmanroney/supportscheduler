@@ -1,3 +1,5 @@
+/*jshint esversion: 6*/
+
 var moment=require('moment');
 
 function pickRandomDay ()
@@ -193,19 +195,18 @@ function populateCalendar (theschedule,startyear,startweek)
       for (j=0; j<2; j++ )
       {
         var temp = {};
-        temp['empid']=theschedule[i][j];
-        temp['date']=scheduleDates[i];
-        temp['shift']=j;
+        temp.empid=theschedule[i][j];
+        temp.date=scheduleDates[i];
+        temp.shift=j;
         var yyyy = scheduleDates[i].getFullYear();
         var mm = scheduleDates[i].getMonth() + 1; // getMonth() is zero-based
         if (mm < 10) mm='0'+mm;
         var dd = scheduleDates[i].getDate();
         if (dd < 10) dd='0'+dd;
-        temp['ymd']=yyyy+'-'+mm+'-'+dd;
-        temp['wn']=moment(scheduleDates[i]).weeks();
-        temp['yr']=yyyy;
+        temp.ymd=yyyy+'-'+mm+'-'+dd;
+        temp.wn=moment(scheduleDates[i]).weeks();
+        temp.yr=yyyy;
         calcSchedule.push(temp);
-        typeof scheduleDates[i];
       }
     }
   }
@@ -221,4 +222,4 @@ module.exports = {
   populateCalendar,
   caclStartPeriod,
   caclEndPeriod
-}
+};

@@ -4,7 +4,7 @@ var app = express();
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var path = require('path');
-var config = require('./config.json');
+var config = require('../config/mongo.json');
 
 require('moment');
 mongoose.set('debug', true);
@@ -197,7 +197,6 @@ router.route('/schedules/id/:schedule_id')
 router.route('/schedules/empid/:empid')
   .get(function(req,res)
   {
-    console.log(req.params.empid);
     Schedule.find({empid:req.params.empid},function(err,schedule)
     {
       if (err)
@@ -246,7 +245,6 @@ router.route('/schedules/date/:date')
           // Write record to Mongo using upsert; if records for future date already
           // here then overwrite them otherwise insert. This is ok since the period
           // is in the future
-          console.log('[received]',results[count].date,results[count].empid,results[count].shift,results[count].ymd);
           Schedule.findOneAndUpdate (
             { ymd: results[count].ymd, shift: results[count].shift },
             results[count],
