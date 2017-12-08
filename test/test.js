@@ -106,6 +106,26 @@ describe('Scheduler', function()
 	describe('Business Rules For Scheduling', function()
 	{
 
+		it ("Only one of the engineers listed in the database can be assigned to a shift", function() {
+
+		});
+
+		it ("There are no unfilled shifts in a 10 day (2 week) peroiod", function() {
+
+		});
+
+		it ("There are no engineers without 0.0 days assignment in a 10 day (2 week) period", function() {
+
+		});
+
+		it ("There are no engineers with only 0.5 days assignment in a 10 day (2 week) period", function() {
+
+		});
+
+		it ("There are no engineers with > 1.0 days assignment in a 10 day (2 week) period", function() {
+
+		});
+
 		it ("An engineer can do at most one half day shift in a day", function() {
 
 		});
