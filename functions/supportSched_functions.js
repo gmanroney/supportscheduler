@@ -20,13 +20,13 @@ function pickRandomShift ()
 function calcStartPeriod (startw,starty)
 {
   // Return start of period
-  return moment(starty+'-01-01').startOf('week').week(startw);
+  return moment(starty+'-01-01').startOf('week').startOf('day').week(startw);
 }
 
 function calcEndPeriod (startw,starty)
 {
   // Return end of period
-  return moment(starty+'-01-01').endOf('week').week(startw+1);
+  return moment(starty+'-01-01').endOf('week').startOf('day').week(startw+1);
 }
 
 function assignEngineers (empids)
