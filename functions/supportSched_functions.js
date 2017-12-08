@@ -17,13 +17,13 @@ function pickRandomShift ()
   return Math.floor(Math.random() * 2);
 }
 
-function caclStartPeriod (startw,starty)
+function calcStartPeriod (startw,starty)
 {
   // Return start of period
   return moment(starty+'-01-01').startOf('week').week(startw);
 }
 
-function caclEndPeriod (startw,starty)
+function calcEndPeriod (startw,starty)
 {
   // Return end of period
   return moment(starty+'-01-01').endOf('week').week(startw+1);
@@ -138,8 +138,8 @@ function populateCalendar (theschedule,startyear,startweek)
 
   // Get start and end dates of 2-week period to be scheduled
   startweek = parseInt(startweek);
-  var startOfSchedule = caclStartPeriod(startweek,startyear);
-  var endOfSchedule = caclEndPeriod(startweek,startyear);
+  var startOfSchedule = calcStartPeriod(startweek,startyear);
+  var endOfSchedule = calcEndPeriod(startweek,startyear);
   var startOfSchedule_ms = startOfSchedule.toDate().getTime();
   var endOfSchedule_ms = endOfSchedule.toDate().getTime();
 
@@ -220,6 +220,6 @@ module.exports = {
   pickRandomShift,
   assignEngineers,
   populateCalendar,
-  caclStartPeriod,
-  caclEndPeriod
+  calcStartPeriod,
+  calcEndPeriod
 };
