@@ -1,10 +1,15 @@
+// Configure chai
 var chai = require('chai');
 var expect = chai.expect;
 var should = chai.should;
 var assert = chai.assert;
 var done = chai.done;
 chai.use(require('chai-moment'));
+
+// Include moment.js for date testing
 var moment=require('moment');
+
+// Import the functions we are testing
 var ssf = require("../functions/supportSched_functions");
 
 describe('Scheduler', function()
@@ -106,36 +111,103 @@ describe('Scheduler', function()
 	describe('Business Rules For Scheduling', function()
 	{
 
-		it ("Only one of the engineers listed in the database can be assigned to a shift", function() {
+		var engineerIDs = [{ "empid" : 121 },{ "empid" : 122 },{ "empid" : 123 },{ "empid" : 124 }, { "empid" : 125 },{ "empid" : 126 },{ "empid" : 127 },{ "empid" : 128 }, { "empid" : 129 },{ "empid" : 130 }];
+		results = ssf.assignEngineers(engineerIDs);
 
+		// intialise array
+		var hours = {};
+		for (i=121; i<131; i++)
+		{
+			hours[i] = 0;
+		}
+
+		// aggregate hours by engineer
+		for (i=0; i<10; i++)
+		{
+			for (j=0; j<2; j++ )
+			{
+				x = results[i][j];
+				hours[x] = hours[x] + 0.5;
+			}
+		}
+
+		it ("Only one of the engineers listed in the database can be assigned to a shift", function() {
+			for (i=0; i<10; i++)
+			{
+				for (j=0; j<2; j++ )
+				{
+					expect(results[i][j]).to.be.at.least(121);
+					expect(results[i][j]).to.be.at.most(130);
+				}
+			}
 		});
 
 		it ("There are no unfilled shifts in a 10 day (2 week) peroiod", function() {
-
+			for (i=0; i<10; i++)
+			{
+				for (j=0; j<2; j++ )
+				{
+					expect(results[i][j]).not.to.equal(null);
+				}
+			}
 		});
 
 		it ("There are no engineers without 0.0 days assignment in a 10 day (2 week) period", function() {
-
+			for (i=121; i<131; i++)
+			{
+				expect(hours[i]).to.equal(1);
+			}
 		});
 
 		it ("There are no engineers with only 0.5 days assignment in a 10 day (2 week) period", function() {
-
+			for (i=121; i<131; i++)
+			{
+				expect(hours[i]).not.equal(0.5);
+			}
 		});
 
 		it ("There are no engineers with > 1.0 days assignment in a 10 day (2 week) period", function() {
-
+			for (i=121; i<131; i++)
+			{
+				expect(hours[i]).not.greaterThan(1);
+			}
 		});
 
 		it ("An engineer can do at most one half day shift in a day", function() {
-
+			for (i=0; i<10; i++)
+			{
+				expect(results[i][0]).not.to.equal(results[i][1]);
+			}
 		});
 
 		it ("An engineer cannot have half day shifts on consecutive days", function() {
-
-		});
-
-		it ("Each engineer should have completed one whole day of support in any 2 week period", function() {
-
+			for (i=0; i<10; i++)
+			{
+				expect(results[i][0]).not.to.equal(results[i][1]);
+				if ( i == 0 )
+				{
+					expect(results[i][0]).not.to.equal(results[i+1][0]);
+					expect(results[i][0]).not.to.equal(results[i+1][1]);
+					expect(results[i][1]).not.to.equal(results[i+1][0]);
+					expect(results[i][1]).not.to.equal(results[i+1][1]);
+				} else if ( i > 0 && i < 9 )
+				{
+					expect(results[i][0]).not.to.equal(results[i+1][0]);
+					expect(results[i][0]).not.to.equal(results[i+1][1]);
+					expect(results[i][1]).not.to.equal(results[i+1][0]);
+					expect(results[i][1]).not.to.equal(results[i+1][1]);
+					expect(results[i][0]).not.to.equal(results[i-1][0]);
+					expect(results[i][0]).not.to.equal(results[i-1][1]);
+					expect(results[i][1]).not.to.equal(results[i-1][0]);
+					expect(results[i][1]).not.to.equal(results[i-1][1]);
+				} else
+				{
+					expect(results[i][0]).not.to.equal(results[i-1][0]);
+					expect(results[i][0]).not.to.equal(results[i-1][1]);
+					expect(results[i][1]).not.to.equal(results[i-1][0]);
+					expect(results[i][1]).not.to.equal(results[i-1][1]);
+				}
+			}
 		});
 
 	});

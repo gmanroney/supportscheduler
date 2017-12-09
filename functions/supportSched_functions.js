@@ -36,7 +36,7 @@ function assignEngineers (empids)
   // with business rules.
 
   // create array to hold schedule information and initalize it with blank values
-  var schedule = new Array(10);
+  var schedule = [];
 
   // loop through employees and assgin 2 half day shifts in the two week period
   retryloop = true;
@@ -56,7 +56,7 @@ function assignEngineers (empids)
     // try to schedule engineers to slots in 2 week cycle according to business rules
     // stating that they only do 0.5 days a day, have at least 1 day in between shifts
     // and only do 1.0  days in a 10 day period (2 weeks, Monday to Friday)
-    console.log("Trying to schedule");
+    //console.log("Scheduling workers ....");
     for (var k=0; k < empids.length; k++ )
     {
       // set unscheduled to 2 for worker initially
@@ -72,7 +72,7 @@ function assignEngineers (empids)
         i = pickRandomDay();
         j = pickRandomShift();
         retrycount = retrycount + 1;
-        console.log("zero",i,j,k,unscheduled,populated,retrycount);
+        //console.log("zero",i,j,k,unscheduled,populated,retrycount);
 
         // if shift is not assigned then check to see if engineer can be added
         if ( schedule[i][j] == "" )
@@ -92,22 +92,22 @@ function assignEngineers (empids)
           if ( i == 0 )
           {
             nextDay = ( schedule[i+1][0] == empids[k].empid || schedule[i+1][1] == empids[k].empid );
-            console.log("one");
+            //console.log("one");
           } else if ( i > 0 && i < 9 )
           {
             nextDay = ( schedule[i+1][0] == empids[k].empid || schedule[i+1][1] == empids[k].empid );
             lastDay = ( schedule[i-1][0] == empids[k].empid || schedule[i-1][1] == empids[k].empid );
-            console.log("two",lastDay,nextDay);
+            //console.log("two",lastDay,nextDay);
           } else
           {
             lastDay = ( schedule[i-1][0] == empids[k].empid || schedule[i-1][1] == empids[k].empid );
-            console.log("three",lastDay,nextDay);
+            //console.log("three",lastDay,nextDay);
           }
 
           // if engineer has not been assigned to yesterday or today then add to schedule
           if ( ! nextDay && ! lastDay )
           {
-            console.log("four",lastDay,nextDay);
+            //console.log("Populating schedule",i,j,k,empids[k].empid);
             schedule[i][j] = empids[k].empid;
             unscheduled = unscheduled - 1;
             populated = populated + 1;
