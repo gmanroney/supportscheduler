@@ -77,35 +77,52 @@ function assignEngineers (empids)
         // if shift is not assigned then check to see if engineer can be added
         if ( schedule[i][j] == "" )
         {
-          // Initialise logical for yesterday and today
-          var nextDay=false;
-          var lastDay=false;
+          // Initialise logical for checking business rules; set to FALSE which means no rule fire (initially);
+          // if TRUE rule fires and allocation is not valid
 
-          if ( unscheduled == 1 && lastDayPicked == i )
-          {
-             nextDay=true;
-             lastDay=true;
-          }
+          var businessRuleCheck=false;
+
+          businessRuleCheck = ( unscheduled == 1 && lastDayPicked == i ) ? true : false;
 
           // check to see if previous or next day contains record for the engineer
           // if it does return false and try again
           if ( i == 0 )
           {
-            nextDay = ( schedule[i+1][0] == empids[k].empid || schedule[i+1][1] == empids[k].empid );
-            //console.log("one");
+            businessRuleCheck = ( schedule[i][0] == empids[k].empid || schedule[i+1][1] == empids[k].empid ) ||
+                              + ( schedule[i][0] == empids[k].empid || schedule[i+1][0] == empids[k].empid ) ||
+                              + ( schedule[i][0] == empids[k].empid || schedule[i+1][1] == empids[k].empid ) ||
+                              + ( schedule[i][0] == empids[k].empid || schedule[i+1][0] == empids[k].empid );
+            console.log(i,j,businessRuleCheck);
           } else if ( i > 0 && i < 9 )
           {
-            nextDay = ( schedule[i+1][0] == empids[k].empid || schedule[i+1][1] == empids[k].empid );
-            lastDay = ( schedule[i-1][0] == empids[k].empid || schedule[i-1][1] == empids[k].empid );
-            //console.log("two",lastDay,nextDay);
+            businessRuleCheck = ( schedule[i][0] == empids[k].empid || schedule[i+1][0] == empids[k].empid ) ||
+                              + ( schedule[i][0] == empids[k].empid || schedule[i+1][1] == empids[k].empid ) ||
+                              + ( schedule[i][1] == empids[k].empid || schedule[i+1][0] == empids[k].empid ) ||
+                              + ( schedule[i][1] == empids[k].empid || schedule[i+1][1] == empids[k].empid ) ||
+                              + ( schedule[i][0] == empids[k].empid || schedule[i-1][0] == empids[k].empid ) ||
+                              + ( schedule[i][0] == empids[k].empid || schedule[i-1][1] == empids[k].empid ) ||
+                              + ( schedule[i][1] == empids[k].empid || schedule[i-1][0] == empids[k].empid ) ||
+                              + ( schedule[i][1] == empids[k].empid || schedule[i-1][1] == empids[k].empid );
           } else
           {
-            lastDay = ( schedule[i-1][0] == empids[k].empid || schedule[i-1][1] == empids[k].empid );
-            //console.log("three",lastDay,nextDay);
+            businessRuleCheck = ( schedule[i][0] == empids[k].empid || schedule[i-1][1] == empids[k].empid ) ||
+                              + ( schedule[i][0] == empids[k].empid || schedule[i-1][0] == empids[k].empid ) ||
+                              + ( schedule[i][1] == empids[k].empid || schedule[i-1][1] == empids[k].empid ) ||
+                              + ( schedule[i][1] == empids[k].empid || schedule[i-1][0] == empids[k].empid );
+          }
+
+          if ( j == 0 && schedule[i][1] == empids[k].empid )
+          {
+            businessRuleCheck=true;
+          }
+
+          if ( j == 1 && schedule[i][0] == empids[k].empid )
+          {
+            businessRuleCheck=true;
           }
 
           // if engineer has not been assigned to yesterday or today then add to schedule
-          if ( ! nextDay && ! lastDay )
+          if ( ! businessRuleCheck )
           {
             //console.log("Populating schedule",i,j,k,empids[k].empid);
             schedule[i][j] = empids[k].empid;
