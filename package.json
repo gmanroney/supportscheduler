@@ -6,10 +6,10 @@
   "scripts": {
     "dev": "NODE_ENV=development nodemon -w src --exec \"babel-node src --presets es2015,stage-0\"",
     "build": "babel src -s -D -d dist --presets es2015,stage-0",
-    "start": "NODE_ENV=production pm2 start dist",
+    "start": "SET NODE_ENV=dev && node server.js",
     "prestart": "npm run -s build",
     "lint": "eslint src",
-    "test": "nyc mocha"
+    "test": "NODE_ENV=test nyc mocha"
   },
   "eslintConfig": {
     "parserOptions": {
@@ -26,7 +26,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gmanroney/swf.git"
+    "url": "https://github.com/gmanroney/swf.git"
   },
   "author": "gerard moroney <gerard.x.moroney@gmail.com>",
   "license": "ISC",
@@ -49,6 +49,7 @@
     "babel-preset-stage-0": "^6.24.1",
     "body-parser": "^1.18.2",
     "chai": "^4.1.2",
+    "chai-http": "^3.0.0",
     "chai-moment": "^0.1.0",
     "csvtojson": "^1.1.9",
     "eslint": "^4.12.0",
@@ -63,7 +64,8 @@
     "mongoose": "^4.13.5",
     "nodemon": "^1.12.1",
     "nyc": "^11.3.0",
-    "request": "^2.83.0"
+    "request": "^2.83.0",
+    "supertest": "^3.0.0"
   },
   "devDependencies": {
     "@angular/cli": "^1.5.4",

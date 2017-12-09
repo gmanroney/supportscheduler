@@ -4,12 +4,12 @@ var app = express();
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var path = require('path');
-var config = require('../config/mongo.json');
+var config = require('../config/dev.json');
 
 require('moment');
 mongoose.set('debug', true);
 //var currentWeekNumber = require('current-week-number');
-
+console.log('xxxx');
 // Configure app for bodyParser() to let us grab data from the body of POST
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());

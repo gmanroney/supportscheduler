@@ -4,13 +4,38 @@ var expect = chai.expect;
 var should = chai.should;
 var assert = chai.assert;
 var done = chai.done;
+//var supertest = require('supertest');
 chai.use(require('chai-moment'));
+
+// Setup for RESTful API call tests
+//api=supertest('http://localhost:3000');
 
 // Include moment.js for date testing
 var moment=require('moment');
 
 // Import the functions we are testing
 var ssf = require("../functions/supportSched_functions");
+
+// Import the functions we are testing
+//var server = require("../src/server");
+
+//describe('API', function()
+//{
+//	this.timeout(5000); // How long to wait for a response (ms)
+//
+//	describe('Engineer RESTful calls', function() {
+//		it('should return a 200 response', function() {
+//			api.get('/api/engineers')
+//			.set('Accept','application/json')
+//			.expect(200,done);
+//		});
+//
+//  });
+//
+//	describe('Schedule RESTful calls', function() {
+//
+//	});
+//});
 
 describe('Scheduler', function()
 {
