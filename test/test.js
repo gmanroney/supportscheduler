@@ -180,40 +180,38 @@ describe('Scheduler', function()
 			}
 		});
 
-		it ("An engineer cannot have half day shifts on consecutive days", function() {
-			for (i=0; i<10; i++)
+		it ("An engineer cannot have a shift on two consecutive days [day 1 & 2 tests]", function() {
+			expect(results[0][0]).not.to.equal(results[1][0]);
+			expect(results[0][0]).not.to.equal(results[1][1]);
+			expect(results[0][1]).not.to.equal(results[1][0]);
+			expect(results[0][1]).not.to.equal(results[1][1]);
+		});
+
+		it ("An engineer cannot have a shift on two consecutive days [day 2 to 9 tests]", function() {
+			for (var i=1; i < results.length - 1 ; i++)
 			{
-				expect(results[i][0]).not.to.equal(results[i][1]);
-				if ( i == 0 )
-				{
-					expect(results[i][0]).not.to.equal(results[i+1][0]);
-					expect(results[i][0]).not.to.equal(results[i+1][1]);
-					expect(results[i][1]).not.to.equal(results[i+1][0]);
-					expect(results[i][1]).not.to.equal(results[i+1][1]);
-				} else if ( i > 0 && i < 9 )
-				{
-					expect(results[i][0]).not.to.equal(results[i+1][0]);
-					expect(results[i][0]).not.to.equal(results[i+1][1]);
-					expect(results[i][1]).not.to.equal(results[i+1][0]);
-					expect(results[i][1]).not.to.equal(results[i+1][1]);
-					expect(results[i][0]).not.to.equal(results[i-1][0]);
-					expect(results[i][0]).not.to.equal(results[i-1][1]);
-					expect(results[i][1]).not.to.equal(results[i-1][0]);
-					expect(results[i][1]).not.to.equal(results[i-1][1]);
-				} else
-				{
-					expect(results[i][0]).not.to.equal(results[i-1][0]);
-					expect(results[i][0]).not.to.equal(results[i-1][1]);
-					expect(results[i][1]).not.to.equal(results[i-1][0]);
-					expect(results[i][1]).not.to.equal(results[i-1][1]);
-				}
-			}
+				expect(results[i][0]).not.to.equal(results[i+1][0]);
+				expect(results[i][0]).not.to.equal(results[i+1][1]);
+				expect(results[i][1]).not.to.equal(results[i+1][0]);
+				expect(results[i][1]).not.to.equal(results[i+1][1]);
+				expect(results[i][0]).not.to.equal(results[i-1][0]);
+				expect(results[i][0]).not.to.equal(results[i-1][1]);
+				expect(results[i][1]).not.to.equal(results[i-1][0]);
+				expect(results[i][1]).not.to.equal(results[i-1][1]);
+			};
 		});
 
-		describe('Populating Calendar', function()
-		{
-
+		it ("An engineer cannot have a shift on two consecutive days [day 9 & 10 tests]", function() {
+			expect(results[9][0]).not.to.equal(results[8][0]);
+			expect(results[9][0]).not.to.equal(results[8][1]);
+			expect(results[9][1]).not.to.equal(results[8][0]);
+			expect(results[9][1]).not.to.equal(results[8][1]);
 		});
+
+		//describe('Populating Calendar', function()
+		//{
+//
+	//	});
 	});
 
 
