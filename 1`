@@ -51,7 +51,7 @@ describe('Scheduler', function()
 		it ("Return first workday date of day 1 week 1 2017", function()
 		{
 			var wk_1_2017 = ssf.calcStartPeriod (1,2017);
-			theDate = [2017,0,1];
+			theDate = [2017,00,01];
 			assert.sameMoment(theDate, wk_1_2017);
 		});
 		it ("Return first workday date  of day 1 week 52 2017", function()
@@ -88,37 +88,37 @@ describe('Scheduler', function()
 		it ("Return last workday date of day 1 week 1 2017", function()
 		{
 			var wk_1_2017 = ssf.calcEndPeriod (1,2017);
-			theDate = [2017,0,14];
+			theDate = [2017,00,14];
 			assert.sameMoment(theDate, wk_1_2017);
 		});
 		it ("Return last workday date of day 1 week 52 2017", function()
 		{
 			var wk_52_2017 = ssf.calcEndPeriod (52,2017);
-			theDate = [2018,0,6];
+			theDate = [2018,00,06];
 			assert.sameMoment(theDate, wk_52_2017);
 		});
 		it ("Return last workday date of day 1 week 1 2018", function()
 		{
 			var wk_1_2018 = ssf.calcEndPeriod (1,2018);
-			theDate = [2018,0,13];
+			theDate = [2018,00,13];
 			assert.sameMoment(theDate, wk_1_2018);
 		});
 		it ("Return last workday date of day 1 week 52 2018", function()
 		{
 			var wk_52_2018 = ssf.calcEndPeriod (52,2018);
-			theDate = [2019,0,5];
+			theDate = [2019,00,05];
 			assert.sameMoment(theDate, wk_52_2018);
 		});
 		it ("Return last workday date of day 1 week 1 2019", function()
 		{
 			var wk_1_2019 = ssf.calcEndPeriod (1,2019);
-			theDate = [2019,0,12];
+			theDate = [2019,00,12];
 			assert.sameMoment(theDate, wk_1_2019);
 		});
 		it ("Return last workday date of day 1 week 52 2019", function()
 		{
 			var wk_52_2019 = ssf.calcEndPeriod (52,2019);
-			theDate = [2020,0,4];
+			theDate = [2020,00,04];
 			assert.sameMoment(theDate, wk_52_2019);
 		});
 
@@ -230,7 +230,7 @@ describe('Scheduler', function()
 				expect(results[i][0]).not.to.equal(results[i-1][1]);
 				expect(results[i][1]).not.to.equal(results[i-1][0]);
 				expect(results[i][1]).not.to.equal(results[i-1][1]);
-			}
+			};
 		});
 
 		it ("An engineer cannot have a shift on two consecutive days [day 9 & 10 tests]", function() {
