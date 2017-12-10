@@ -64,15 +64,15 @@ router.route('/engineers')
 
   .post(function(req,res)
   {
-    // Count number of records
-    Engineer.count({}, function(err, count)
+    var countQuery = Engineer.count();
+    countQuery.exec(function (e, count)
     {
-      console.log( "Number of docs: ", count );
       if (count > 10)
       {
-        console.log("More than 10 engineers now; the 10 most senior engineers will be scheduled" );
+        console.log("More than 10 engineers; scheduler may not work." );
       }
-    });
+    })
+
     // create record
     var engineer = new Engineer();
     engineer.fname = req.body.fname;

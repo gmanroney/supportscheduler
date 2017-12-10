@@ -21,25 +21,62 @@ var ssf = require("../functions/supportSched_functions");
 
 //Our parent block
 describe('API: Engineer', () => {
-  beforeEach((done) => { //Before each test we empty the database
-        Engineer.remove({}, (err) => {
-           done();
-        });
+  beforeEach((done) =>  { //Before each test we empty the database
+    Engineer.remove({}, (err) => {
+      done();
     });
-/*
-  * Test the /GET route
-  */
+  });
+
+  // Test the /GET route
   describe('Testing /GET engineers', () => {
-      it('it should GET all the books', (done) => {
-        chai.request(server)
-            .get('/api/engineers')
-            .end((err, res) => {
-                res.should.have.status(200);
-                res.body.should.be.a('array');
-                res.body.length.should.be.eql(0);
-              done();
-            });
+    it('It should get all of the engineers', (done) => {
+      chai.request(server)
+      .get('/api/engineers')
+      .end((err, res) => {
+        res.should.have.status(200);
+        res.body.should.be.a('array');
+        res.body.length.should.be.eql(0);
+        done();
       });
+    });
+  });
+
+  //Test the /POST route
+  describe('Testing /POST engineers', () => {
+    it('It should create an engineer (all fields required)', (done) => {
+      let engineer =
+      {
+        empid: "18223",
+        gender: "M",
+        lname: "Polonei",
+        fname: "Gerard",
+        start: "2011-01-1",
+        dob: "199-01-02"
+      }
+      chai.request(server)
+      .post('/api/engineers')
+      .send(engineer)
+      .end((err, res) => {
+        res.should.have.status(200);
+        res.body.should.be.a('object');
+        res.body.message.should.equal('Engineer record created successfully');
+        done();
+      });
+    });
+  });
+
+  //Test the /DELETE route
+  describe('Testing /DELETE engineers', () => {
+    it('It should delete all engineers', (done) => {
+      chai.request(server)
+      .delete('/api/engineers')
+      .end((err, res) => {
+        res.should.have.status(200);
+        res.body.should.be.a('object');
+        res.body.message.should.equal('All engineer records deleted');
+        done();
+      });
+    });
   });
 
 });
