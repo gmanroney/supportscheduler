@@ -1,41 +1,47 @@
-// Configure chai
+//During the test the env variable is set to test
+process.env.NODE_ENV = 'test';
+
+let mongoose = require("mongoose");
+let Engineer = require('../models/engineer');
+
+//Require the dev-dependencies
 var chai = require('chai');
 var expect = chai.expect;
-var should = chai.should;
+let should = chai.should();
 var assert = chai.assert;
 var done = chai.done;
-//var supertest = require('supertest');
+let chaiHttp = require('chai-http');
+let server = require('../src/server');
+chai.use(chaiHttp);
 chai.use(require('chai-moment'));
-
-// Setup for RESTful API call tests
-//api=supertest('http://localhost:3000');
-
-// Include moment.js for date testing
-var moment=require('moment');
 
 // Import the functions we are testing
 var ssf = require("../functions/supportSched_functions");
 
-// Import the functions we are testing
-//var server = require("../src/server");
+//Our parent block
+describe('API: Engineer', () => {
+  beforeEach((done) => { //Before each test we empty the database
+        Engineer.remove({}, (err) => {
+           done();
+        });
+    });
+/*
+  * Test the /GET route
+  */
+  describe('Testing /GET engineers', () => {
+      it('it should GET all the books', (done) => {
+        chai.request(server)
+            .get('/api/engineers')
+            .end((err, res) => {
+                res.should.have.status(200);
+                res.body.should.be.a('array');
+                res.body.length.should.be.eql(0);
+              done();
+            });
+      });
+  });
 
-//describe('API', function()
-//{
-//	this.timeout(5000); // How long to wait for a response (ms)
-//
-//	describe('Engineer RESTful calls', function() {
-//		it('should return a 200 response', function() {
-//			api.get('/api/engineers')
-//			.set('Accept','application/json')
-//			.expect(200,done);
-//		});
-//
-//  });
-//
-//	describe('Schedule RESTful calls', function() {
-//
-//	});
-//});
+});
 
 describe('Scheduler', function()
 {
@@ -238,8 +244,9 @@ describe('Scheduler', function()
 //
 	//	});
 	});
+});
 
-
-
-
+// Kill the server to end the unit testing
+after(function () {
+  process.exit(0);
 });

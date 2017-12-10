@@ -4,12 +4,12 @@ var app = express();
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var path = require('path');
-var config = require('../config/dev.json');
-
+var config = require('../config/test.json');
 require('moment');
-mongoose.set('debug', true);
-//var currentWeekNumber = require('current-week-number');
-console.log('xxxx');
+
+// Set debugging for mongo connections
+mongoose.set('debug', config.mongodb.debug);
+
 // Configure app for bodyParser() to let us grab data from the body of POST
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
@@ -29,10 +29,12 @@ app.use(express.static(path.join(__dirname, '../public')));
 var router = express.Router();
 app.use('/api',router);
 
-// Start the server (environment variable or port 3000 if not defined)
-app.listen(port);
+// Start the server (environment variable or port 3000 if not defined).
+// Made server a variable so I can export to mocha/chai for unit testing.
+//Seems to have lost ability for app to populate current week number in schedule section. This make sense?
+var server = app.listen(port);
+module.exports = server;
 console.log('Server listening on port ' + port);
-
 
 // ------------------------- BASIC SERVER CREATED --------------------- //
 
@@ -88,7 +90,7 @@ router.route('/engineers')
       {
         res.send(err);
       }
-      res.json({ message: "Engineer record created"});
+      res.json({ message: "Engineer record created successfully", engineer});
     });
   })
 
@@ -101,6 +103,18 @@ router.route('/engineers')
         res.send(err);
       }
       res.json(engineer);
+    });
+  })
+
+  .delete(function(req,res)
+  {
+    Engineer.remove(function(err,engineer)
+    {
+      if (err)
+      {
+        res.send(err);
+      }
+      res.json({ message: "All engineer records deleted"});
     });
   });
 
@@ -157,7 +171,7 @@ router.route('/engineers/:empid')
       {
         res.send(err);
       }
-      res.json(engineer);
+      res.json({ message: "Engineer record deleted successfully EmployeeID: ", empid:req.params.empid});
     });
   });
 
@@ -253,8 +267,7 @@ router.route('/schedules/date/:date')
           );
         }
       });
-      console.log('Schedule POST(year/weekstart) Completed');
-      res.json({message: 'Schedule POST (year/weekstart) Completed'});
+      res.json({message: 'Schedule creation completed successfully for year/period = ' + req.params.schedule_year + req.params.schedule_period });
     })
 
     .get(function(req,res)
@@ -277,8 +290,7 @@ router.route('/schedules/date/:date')
       function(err,schedule)
       {
         if (err) res.send(err);
-        console.log('Schedule DELETE(year/weekstart) Completed');
-        res.json({message: 'Schedule DELETE(year/weekstart) Completed'});
+        res.json({message: 'Schedule deletion completed successfully for year/period = ' + req.params.schedule_year + req.params.schedule_period});
       });
       //console.log('Schedule GET Completed');
     });

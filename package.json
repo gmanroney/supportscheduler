@@ -9,7 +9,7 @@
     "start": "SET NODE_ENV=dev && node server.js",
     "prestart": "npm run -s build",
     "lint": "eslint src",
-    "test": "NODE_ENV=test nyc mocha"
+    "test": "mocha --timeout 10000"
   },
   "eslintConfig": {
     "parserOptions": {

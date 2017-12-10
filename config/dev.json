@@ -3,6 +3,7 @@
   "mongodb": {
     "host": "localhost",
     "port": 27017,
-    "db": "swf_dev"
+    "db": "swf_dev",
+    "debug": true
   }
 }

@@ -72,8 +72,7 @@ function assignEngineers (empids)
         i = pickRandomDay();
         j = pickRandomShift();
         retrycount = retrycount + 1;
-        //console.log("zero",i,j,k,unscheduled,populated,retrycount);
-
+    
         // if shift is not assigned then check to see if engineer can be added
         if ( schedule[i][j] == "" )
         {
@@ -92,7 +91,6 @@ function assignEngineers (empids)
                               + ( schedule[i][0] == empids[k].empid || schedule[i+1][0] == empids[k].empid ) ||
                               + ( schedule[i][0] == empids[k].empid || schedule[i+1][1] == empids[k].empid ) ||
                               + ( schedule[i][0] == empids[k].empid || schedule[i+1][0] == empids[k].empid );
-            console.log(i,j,businessRuleCheck);
           } else if ( i > 0 && i < 9 )
           {
             businessRuleCheck = ( schedule[i][0] == empids[k].empid || schedule[i+1][0] == empids[k].empid ) ||
@@ -124,7 +122,6 @@ function assignEngineers (empids)
           // if engineer has not been assigned to yesterday or today then add to schedule
           if ( ! businessRuleCheck )
           {
-            //console.log("Populating schedule",i,j,k,empids[k].empid);
             schedule[i][j] = empids[k].empid;
             unscheduled = unscheduled - 1;
             populated = populated + 1;
