@@ -1,3 +1,5 @@
+/*jshint esversion: 6 */
+
 //During the test the env variable is set to test
 process.env.NODE_ENV = 'test';
 
@@ -52,7 +54,7 @@ describe('API: Engineer', () => {
         fname: "Gerard",
         start: "2011-01-1",
         dob: "199-01-02"
-      }
+      };
       chai.request(server)
       .post('/api/engineers')
       .send(engineer)

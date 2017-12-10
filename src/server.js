@@ -1,3 +1,5 @@
+/*jshint esversion: 6 */
+
 // Import packages and initiate express app
 var express = require('express');
 var app = express();
@@ -71,7 +73,7 @@ router.route('/engineers')
       {
         console.log("More than 10 engineers; scheduler may not work." );
       }
-    })
+    });
 
     // create record
     var engineer = new Engineer();
