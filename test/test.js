@@ -67,6 +67,30 @@ describe('API: Engineer', () => {
     });
   });
 
+  //Test the /POST route when for an employee with duplicate ID does not complete
+  describe('Testing /POST engineers ', () => {
+    it('Duplicate Employee   ID will not complete but exits gracefully', (done) => {
+      let engineer =
+      {
+        empid: "18223",
+        gender: "M",
+        lname: "Polonei",
+        fname: "Gerard",
+        start: "2011-01-1",
+        dob: "199-01-02"
+      };
+      chai.request(server)
+      .post('/api/engineers')
+      .send(engineer)
+      .end((err, res) => {
+        res.should.have.status(200);
+        res.body.should.be.a('object');
+        res.body.message.should.equal('Employee with same EmpID exists in database; record not created');
+        done();
+      });
+    });
+  });
+
   //Test the /DELETE route
   describe('Testing /DELETE engineers', () => {
     it('It should delete all engineers', (done) => {

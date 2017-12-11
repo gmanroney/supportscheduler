@@ -100,7 +100,7 @@ router.route('/engineers')
           res.json({ message: "Engineer record created successfully", engineer});
         });
       } else {
-        res.json({ message: "Employee with EmpID " + engineer.empid + " exists in database; record not created"});
+        res.json({ message: "Employee with same EmpID exists in database; record not created"});
       }
     });
   })
