@@ -84,15 +84,24 @@ router.route('/engineers')
     engineer.dob = req.body.dob;
     engineer.start = req.body.start;
 
-    // save record
-    engineer.save(function(err)
-    {
-      // if error on save  output error otherwise print confirmation note
-      if (err)
+    Engineer.distinct('empid', function(err, empids) {
+
+      containsCheck  = contains(empids,engineer.empid);
+      if ( ! containsCheck )
       {
-        res.send(err);
+        // if no employee in the database has the same empid then save record
+        engineer.save(function(err)
+        {
+          // if error on save  output error otherwise print confirmation note
+          if (err)
+          {
+            res.send(err);
+          }
+          res.json({ message: "Engineer record created successfully", engineer});
+        });
+      } else {
+        res.json({ message: "Employee with EmpID " + engineer.empid + " exists in database; record not created"});
       }
-      res.json({ message: "Engineer record created successfully", engineer});
     });
   })
 
@@ -301,4 +310,15 @@ router.route('/schedules/date/:date')
 function getEngineerIDs(){
    var query = Engineer.find({},{empid:1, _id:0});
    return query;
+}
+
+// Check to see if a value is in an array
+function contains( r, val ) {
+    var i = 0, len = r.length;
+    for(; i < len; i++ ) {
+        if( r[i] === val ) {
+            return true;
+        }
+     }
+     return false;
 }
