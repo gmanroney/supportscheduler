@@ -1,4 +1,4 @@
-[Summary]
+Summary
 -------
 Design and build the “Support Wheel of Fate”
 
