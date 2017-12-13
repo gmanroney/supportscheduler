@@ -46,6 +46,7 @@ describe('API: Engineer', () => {
   //Test the /POST route
   describe('Testing /POST engineers', () => {
     it('It should create an engineer (all fields required)', (done) => {
+      console.log("one");
       let engineer =
       {
         empid: "18223",
@@ -53,12 +54,13 @@ describe('API: Engineer', () => {
         lname: "Polonei",
         fname: "Gerard",
         start: "2011-01-1",
-        dob: "199-01-02"
+        dob: "2011-01-1"
       };
       chai.request(server)
       .post('/api/engineers')
       .send(engineer)
       .end((err, res) => {
+        console.log("yyyy   ",res.body.message);
         res.should.have.status(200);
         res.body.should.be.a('object');
         res.body.message.should.equal('Engineer record created successfully');
@@ -67,42 +69,48 @@ describe('API: Engineer', () => {
     });
   });
 
-  //Test the /POST route when for an employee with duplicate ID does not complete
-  describe('Testing /POST engineers ', () => {
-    it('Duplicate Employee   ID will not complete but exits gracefully', (done) => {
+  describe('Testing /POST engineers', () => {
+    it('It should create an engineer (all fields required)', (done) => {
+      console.log("one");
       let engineer =
       {
-        empid: "18223",
+        empid: "1823323",
         gender: "M",
         lname: "Polonei",
         fname: "Gerard",
         start: "2011-01-1",
-        dob: "199-01-02"
+        dob: "2011-01-1"
       };
       chai.request(server)
       .post('/api/engineers')
       .send(engineer)
       .end((err, res) => {
+        console.log("yyyy   ",res.body.message);
         res.should.have.status(200);
         res.body.should.be.a('object');
-        res.body.message.should.equal('Employee with same EmpID exists in database; record not created');
+        res.body.message.should.equal('Engineer record created successfully');
         done();
       });
     });
   });
 
+//  //Test the /POST route when for an employee with duplicate ID does not complete
+//  describe('Testing /POST engineers (duplicate EmpID) ', () => {
+//  });
+
+  //});
   //Test the /DELETE route
   describe('Testing /DELETE engineers', () => {
     it('It should delete all engineers', (done) => {
-      chai.request(server)
-      .delete('/api/engineers')
-      .end((err, res) => {
-        res.should.have.status(200);
-        res.body.should.be.a('object');
-        res.body.message.should.equal('All engineer records deleted');
-        done();
-      });
-    });
+     chai.request(server)
+     .delete('/api/engineers')
+     .end((err, res) => {
+       res.should.have.status(200);
+       res.body.should.be.a('object');
+       res.body.message.should.equal('All engineer records deleted');
+       done();
+     });
+   });
   });
 
 });
@@ -308,9 +316,4 @@ describe('Scheduler', function()
 //
 	//	});
 	});
-});
-
-// Kill the server to end the unit testing
-after(function () {
-  process.exit(0);
 });

@@ -85,8 +85,9 @@ router.route('/engineers')
     engineer.start = req.body.start;
 
     Engineer.distinct('empid', function(err, empids) {
-
-      containsCheck  = contains(empids,engineer.empid);
+      console.log(empids);
+      var containsCheck = getEmployeeIDCheck(empids,engineer.empid);
+      console.log("check  = ", containsCheck, empids.length);
       if ( ! containsCheck )
       {
         // if no employee in the database has the same empid then save record
@@ -313,9 +314,12 @@ function getEngineerIDs(){
 }
 
 // Check to see if a value is in an array
-function contains( r, val ) {
+ //getEmployeeIDCheck(empids,engineer.empid);
+function getEmployeeIDCheck ( r, val ) {
+    console.log("at start of getEmployeeIDCheck", r.length, val);
     var i = 0, len = r.length;
     for(; i < len; i++ ) {
+        console.log(i,r[i],val);
         if( r[i] === val ) {
             return true;
         }
