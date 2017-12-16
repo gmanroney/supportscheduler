@@ -84,10 +84,9 @@ swof.controller('scheduleController', ['$scope', '$log', '$http', '$filter', fun
 
 }]);
 
-swof.controller('scheduleCalendarDisplay', function(moment, alert, calendarConfig) {
+swof.controller('scheduleCalendarDisplay',[ '$scope', '$log', '$http', '$filter', 'moment', 'alert', 'calendarConfig', function($scope, $log, $http, $filter, moment, alert, calendarConfig) {
 
   var vm = this;
-
   //These variables MUST be set as a minimum for the calendar to work
   vm.calendarView = 'month';
   vm.viewDate = new Date();
@@ -102,6 +101,7 @@ swof.controller('scheduleCalendarDisplay', function(moment, alert, calendarConfi
       alert.show('Deleted', args.calendarEvent);
     }
   }];
+
   vm.events = [
     {
       title: 'An event',
@@ -109,16 +109,14 @@ swof.controller('scheduleCalendarDisplay', function(moment, alert, calendarConfi
       startsAt: moment().startOf('week').subtract(2, 'days').add(8, 'hours').toDate(),
       endsAt: moment().startOf('week').add(1, 'week').add(9, 'hours').toDate(),
       draggable: true,
-      resizable: true,
-      actions: actions
+      resizable: true
     }, {
       title: '<i class="glyphicon glyphicon-asterisk"></i> <span class="text-primary">Another event</span>, with a <i>html</i> title',
       color: calendarConfig.colorTypes.info,
       startsAt: moment().subtract(1, 'day').toDate(),
       endsAt: moment().add(5, 'days').toDate(),
       draggable: true,
-      resizable: true,
-      actions: actions
+      resizable: true
     }, {
       title: 'This is a really long event title that occurs on every year',
       color: calendarConfig.colorTypes.important,
@@ -126,10 +124,32 @@ swof.controller('scheduleCalendarDisplay', function(moment, alert, calendarConfi
       endsAt: moment().startOf('day').add(19, 'hours').toDate(),
       recursOn: 'year',
       draggable: true,
-      resizable: true,
-      actions: actions
+      resizable: true
     }
   ];
+
+  $http.get('/api/schedules')
+        .then (function(data) {
+            $scope.schedules = data;
+            $scope.schedulesCount = data.data.length;
+            console.log(data.data.length);
+            for (var i=0; i < data.data.length; i++ ) {
+              var startsAt=moment(data.data[i]["date"]);
+              var endsAt=moment(startsAt).add(1,'day');
+              console.log(new Date(startsAt),new Date(endsAt));
+              vm.events.push({
+                title: 'SWOF For ' + data.data[i]["empid"],
+                startsAt: new Date(startsAt),
+                endsAt: new Date(endsAt),
+                color: calendarConfig.colorTypes.important,
+                draggable: true,
+                resizable: true
+              });
+            };
+
+        }, function(data) {
+          $log.error();('Error: ' + data);
+        });
 
   vm.cellIsOpen = true;
 
@@ -186,7 +206,7 @@ swof.controller('scheduleCalendarDisplay', function(moment, alert, calendarConfi
 
   };
 
-});
+}]);
 
 swof.controller('helpController', ['$scope', '$log', function($scope, $log) {
 
