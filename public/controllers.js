@@ -102,46 +102,52 @@ swof.controller('scheduleCalendarDisplay',[ '$scope', '$log', '$http', '$filter'
     }
   }];
 
-  vm.events = [
-    {
-      title: 'An event',
-      color: calendarConfig.colorTypes.warning,
-      startsAt: moment().startOf('week').subtract(2, 'days').add(8, 'hours').toDate(),
-      endsAt: moment().startOf('week').add(1, 'week').add(9, 'hours').toDate(),
-      draggable: true,
-      resizable: true
-    }, {
-      title: '<i class="glyphicon glyphicon-asterisk"></i> <span class="text-primary">Another event</span>, with a <i>html</i> title',
-      color: calendarConfig.colorTypes.info,
-      startsAt: moment().subtract(1, 'day').toDate(),
-      endsAt: moment().add(5, 'days').toDate(),
-      draggable: true,
-      resizable: true
-    }, {
-      title: 'This is a really long event title that occurs on every year',
-      color: calendarConfig.colorTypes.important,
-      startsAt: moment().startOf('day').add(7, 'hours').toDate(),
-      endsAt: moment().startOf('day').add(19, 'hours').toDate(),
-      recursOn: 'year',
-      draggable: true,
-      resizable: true
-    }
-  ];
+//  vm.events = [
+//    {
+//      title: 'An event',
+//      color: calendarConfig.colorTypes.warning,
+//      startsAt: moment().startOf('week').subtract(2, 'days').add(8, 'hours').toDate(),
+//      endsAt: moment().startOf('week').add(1, 'week').add(9, 'hours').toDate(),
+//      draggable: true,
+//      resizable: true
+//    }, {
+//      title: '<i class="glyphicon glyphicon-asterisk"></i> <span class="text-primary">Another event</span>, with a <i>html</i> title',
+//      color: calendarConfig.colorTypes.info,
+//      startsAt: moment().subtract(1, 'day').toDate(),
+//      endsAt: moment().add(5, 'days').toDate(),
+//      draggable: true,
+//      resizable: true
+//    }, {
+//      title: 'This is a really long event title that occurs on every year',
+//      color: calendarConfig.colorTypes.important,
+//      startsAt: moment().startOf('day').add(7, 'hours').toDate(),
+//      endsAt: moment().startOf('day').add(19, 'hours').toDate(),
+//      recursOn: 'year',
+//      draggable: true,
+//      resizable: true
+//    }
+//  ];
 
   $http.get('/api/schedules')
         .then (function(data) {
             $scope.schedules = data;
             $scope.schedulesCount = data.data.length;
-            console.log(data.data.length);
             for (var i=0; i < data.data.length; i++ ) {
-              var startsAt=moment(data.data[i]["date"]);
-              var endsAt=moment(startsAt).add(1,'day');
-              console.log(new Date(startsAt),new Date(endsAt));
+              if ( data.data[i].shift == 0 )
+              {
+                var startsAt=moment(data.data[i]["date"]).add(9,'hour');
+                var endsAt=moment(startsAt).add(4,'hour');
+                var eventColor=calendarConfig.colorTypes.warning;
+              } else {
+                var startsAt=moment(data.data[i]["date"]).add(14,'hour');
+                var endsAt=moment(startsAt).add(4,'hour');
+                var eventColor=calendarConfig.colorTypes.important;
+              };
               vm.events.push({
-                title: 'SWOF For ' + data.data[i]["empid"],
+                title: 'Empid:' + data.data[i]["empid"],
                 startsAt: new Date(startsAt),
                 endsAt: new Date(endsAt),
-                color: calendarConfig.colorTypes.important,
+                color: eventColor,
                 draggable: true,
                 resizable: true
               });
