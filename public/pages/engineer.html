@@ -1,37 +1,31 @@
-<div class="row">
-  <div class="resizable column" style="margin-top: 5%">
-    <h3>A Few Good Engineers</h3>
-    <div id="jump">List of engineers who have volunteered to be part of the Support Wheel Of Fame ;-)</div>
-    <p>Filter enginers by lastname, firstname and employeeID. Sort engineers by lastname, firstname, employeeID. See shifts worked by engineer in the past. Find out what shifts an engineer is scheduled for in the future.</p>
-  </div>
+<br>
+<h3>A Few Good Engineers</h3>
+<div id="jump">List of engineers who have volunteered to be part of the Support Wheel Of Fame ;-)</div>
+<p>Filter enginers by lastname, firstname and employeeID. Sort engineers by lastname, firstname, employeeID. See shifts worked by engineer in the past. Find out what shifts an engineer is scheduled for in the future.</p>
+<br>
+<div class="container">
+<i>Search Engineers :</i>
+  <input type="text" class="form-control ng-valid ng-dirty" ng-model="searchKeyword" style="width: 355px;">
 </div>
-<!-- ENGINEER LIST -->
-<div id="engineer-list" class="row">
-    <!-- LOOP OVER THE engineer IN $scope.engineers -->
-    <table>
-      <span class="col-md-3">
-        <i>Search Engineers :</i>
-			<input type="text" class="form-control ng-valid ng-dirty" ng-model="searchKeyword">
-			</span>
+<div class="container">
+  <div id="engineer-list" class="row">
+  <table>
+    <tr>
+      <th><a href="" ng-click="orderByField='empid'; reverseSort = !reverseSort">Employee ID</a></th>
+      <th>First Name</th>
+      <th>Last Name</th>
+      <th>Work Start Date</th>
+    </tr>
+    <tbody ng-repeat="engineer in (filtered = (engineers.data | filter: query | filter: searchKeyword | orderBy: orderByField:reverseSort))">
       <tr>
-        <th><a href="" ng-click="orderByField='empid'; reverseSort = !reverseSort">Employee ID</a>
-		</th>
-        <th>First Name</th>
-        <th>Last Name</th>
-        <th>Work Start Date</th>
+        <td>{{engineer.empid}}</td>
+        <td>{{engineer.fname}}</td>
+        <td>{{engineer.lname}}</td>
+        <td>{{engineer.start | date: 'dd/MM/yy'}}</td>
+        <td><a href="#!/engineerSchedule" ngmodel=empschedid ng-click="getEmpidSchedule(engineer.empid)" class="button button-primary">schedule</a></td>
       </tr>
-      <tbody ng-repeat="engineer in (filtered = (engineers.data | filter: query | filter: searchKeyword | orderBy: orderByField:reverseSort))">
-        <tr>
-          <td>{{engineer.empid}}</td>
-          <td>{{engineer.fname}}</td>
-          <td>{{engineer.lname}}</td>
-          <td>{{engineer.start | date: 'dd/MM/yy'}}</td>
-          <td><a href="#!/engineerSchedule" ngmodel=empschedid ng-click="getEmpidSchedule(engineer.empid)" class="button button-primary">schedule</a></td>
-        </tr>
-      </tbody>
-    </table>
-    <p ng-cloak>Records returned = {{filtered.length}}</p>
-
+    </tbody>
+  </table>
   </div>
-  <hr></hr>
-  <p></p>
+  <p ng-cloak>Records returned = {{filtered.length}}</p>
+</div>

@@ -56,7 +56,6 @@ function assignEngineers (empids)
     // try to schedule engineers to slots in 2 week cycle according to business rules
     // stating that they only do 0.5 days a day, have at least 1 day in between shifts
     // and only do 1.0  days in a 10 day period (2 weeks, Monday to Friday)
-    //console.log("Scheduling workers ....");
     for (var k=0; k < empids.length; k++ )
     {
       // set unscheduled to 2 for worker initially
@@ -72,7 +71,7 @@ function assignEngineers (empids)
         i = pickRandomDay();
         j = pickRandomShift();
         retrycount = retrycount + 1;
-    
+
         // if shift is not assigned then check to see if engineer can be added
         if ( schedule[i][j] == "" )
         {

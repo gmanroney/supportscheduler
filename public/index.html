@@ -9,11 +9,13 @@
 
 	<title>swof</title>
 
-  <link rel="stylesheet" href="../css/normalize.css">
-  <link rel="stylesheet" href="../css/skeleton.css">
-	<link rel="stylesheet" href="../css/swof.css">
-
-  <link rel="icon" type="image/png" href="../images/favicon.png">
+	<link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link href="node_modules/angular-bootstrap-colorpicker/css/colorpicker.min.css" rel="stylesheet">
+	<link href="node_modules/angular-bootstrap-calendar/dist/css/angular-bootstrap-calendar.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/skeleton.css">
+	<link rel="stylesheet" href="css/swof.css">
+	<link rel="icon" type="image/png" href="images/favicon.png">
 
   <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -23,6 +25,13 @@
 	<script src="//code.angularjs.org/1.6.7/angular-route.min.js"></script>
 	<script src="//code.angularjs.org/1.6.7/angular-resource.min.js"></script>
 	<script src="//code.angularjs.org/1.6.7/angular-messages.min.js"></script>
+	<script src="node_modules/moment/min/moment.min.js"></script>
+	<script src="node_modules/interactjs/dist/interact.min.js"></script>
+	<script src="node_modules/angular-animate/angular-animate.min.js"></script>
+	<script src="node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script>
+	<script src="node_modules/rrule/lib/rrule.js"></script>
+	<script src="node_modules/angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module.min.js"></script>
+	<script src="node_modules/angular-bootstrap-calendar/dist/js/angular-bootstrap-calendar-tpls.min.js"></script>
 	<script src="app.js"></script>
 	<script src="routes.js"></script>
   <script src="services.js"></script>
@@ -40,8 +49,8 @@
 			<a href="#!/schedule">Schedules</a>
 			<a href="#!/status">Status</a>
 		</div>
-		<div ng-view>
-		</div>
+	</div>
+	<div class="container" ng-view>
 	</div>
 </body>
 </html>

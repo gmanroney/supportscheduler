@@ -15,7 +15,6 @@ swof.controller('engineerScheduleController', ['$scope', '$log', '$http', 'engSc
     .then (function(data)
     {
       $scope.empidSchedules = data;
-      console.log(data);
     }, function(data) {
       $log.error();('Error: ' + data);
     });
@@ -36,7 +35,6 @@ swof.controller('engineerController', ['$scope', '$log', '$http',  'engSchedServ
     $http.get('/api/engineers')
         .then (function(data) {
             $scope.engineers = data;
-            console.log(data);
             $scope.engineersCount = data.data.length;
         }, function(data) {
           $log.error();('Error: ' + data);
@@ -45,7 +43,6 @@ swof.controller('engineerController', ['$scope', '$log', '$http',  'engSchedServ
     $scope.getEmpidSchedule = function(userid)
     {
       $scope.empschedid = userid;
-      console.log($scope.empschedid);
     };
 }]);
 
@@ -53,7 +50,7 @@ swof.controller('scheduleController', ['$scope', '$log', '$http', '$filter', fun
 
   $scope.name = 'scheduleController';
   $log.info('Controller: '+ $scope.name);
-  console.log($filter('date')(new Date(), 'w'));
+  //console.log($filter('date')(new Date(), 'w'));
   $scope.years = ["2017", "2018", "2019"];
   $scope.selectedYear = "2017";
   $scope.selectedPeriod = Number(( ($filter('date')(new Date(), 'ww')) %2 == 0) ? ($filter('date')(new Date(), 'ww')) : (($filter('date')(new Date(), 'ww')) - 1));
@@ -62,7 +59,6 @@ swof.controller('scheduleController', ['$scope', '$log', '$http', '$filter', fun
   $http.get('/api/schedules')
         .then (function(data) {
             $scope.schedules = data;
-            console.log(data);
             $scope.schedulesCount = data.data.length;
         }, function(data) {
           $log.error();('Error: ' + data);
@@ -73,7 +69,6 @@ swof.controller('scheduleController', ['$scope', '$log', '$http', '$filter', fun
           $http.get('/api/schedules/'+$scope.selectedYear+'/'+$scope.selectedPeriod)
           .then (function(data) {
             $scope.schedules = data;
-            console.log(data);
           }, function(data) {
             $log.error();('Error: ' + data);
           })};
@@ -83,12 +78,115 @@ swof.controller('scheduleController', ['$scope', '$log', '$http', '$filter', fun
           $http.post('/api/schedules/'+$scope.selectedYear+'/'+$scope.selectedPeriod)
           .then (function(data) {
             $scope.schedulegen = data;
-           console.log(data);
           }, function(data) {
               $log.error();('Error: ' + data);
           })};
 
 }]);
+
+swof.controller('KitchenSinkCtrl', function(moment, alert, calendarConfig) {
+
+    var vm = this;
+
+    //These variables MUST be set as a minimum for the calendar to work
+    vm.calendarView = 'month';
+    vm.viewDate = new Date();
+    var actions = [{
+      label: '<i class=\'glyphicon glyphicon-pencil\'></i>',
+      onClick: function(args) {
+        alert.show('Edited', args.calendarEvent);
+      }
+    }, {
+      label: '<i class=\'glyphicon glyphicon-remove\'></i>',
+      onClick: function(args) {
+        alert.show('Deleted', args.calendarEvent);
+      }
+    }];
+    vm.events = [
+      {
+        title: 'An event',
+        color: calendarConfig.colorTypes.warning,
+        startsAt: moment().startOf('week').subtract(2, 'days').add(8, 'hours').toDate(),
+        endsAt: moment().startOf('week').add(1, 'week').add(9, 'hours').toDate(),
+        draggable: true,
+        resizable: true,
+        actions: actions
+      }, {
+        title: '<i class="glyphicon glyphicon-asterisk"></i> <span class="text-primary">Another event</span>, with a <i>html</i> title',
+        color: calendarConfig.colorTypes.info,
+        startsAt: moment().subtract(1, 'day').toDate(),
+        endsAt: moment().add(5, 'days').toDate(),
+        draggable: true,
+        resizable: true,
+        actions: actions
+      }, {
+        title: 'This is a really long event title that occurs on every year',
+        color: calendarConfig.colorTypes.important,
+        startsAt: moment().startOf('day').add(7, 'hours').toDate(),
+        endsAt: moment().startOf('day').add(19, 'hours').toDate(),
+        recursOn: 'year',
+        draggable: true,
+        resizable: true,
+        actions: actions
+      }
+    ];
+
+    vm.cellIsOpen = true;
+
+    vm.addEvent = function() {
+      vm.events.push({
+        title: 'New event',
+        startsAt: moment().startOf('day').toDate(),
+        endsAt: moment().endOf('day').toDate(),
+        color: calendarConfig.colorTypes.important,
+        draggable: true,
+        resizable: true
+      });
+    };
+
+    vm.eventClicked = function(event) {
+      alert.show('Clicked', event);
+    };
+
+    vm.eventEdited = function(event) {
+      alert.show('Edited', event);
+    };
+
+    vm.eventDeleted = function(event) {
+      alert.show('Deleted', event);
+    };
+
+    vm.eventTimesChanged = function(event) {
+      alert.show('Dropped or resized', event);
+    };
+
+    vm.toggle = function($event, field, event) {
+      $event.preventDefault();
+      $event.stopPropagation();
+      event[field] = !event[field];
+    };
+
+    vm.timespanClicked = function(date, cell) {
+
+      if (vm.calendarView === 'month') {
+        if ((vm.cellIsOpen && moment(date).startOf('day').isSame(moment(vm.viewDate).startOf('day'))) || cell.events.length === 0 || !cell.inMonth) {
+          vm.cellIsOpen = false;
+        } else {
+          vm.cellIsOpen = true;
+          vm.viewDate = date;
+        }
+      } else if (vm.calendarView === 'year') {
+        if ((vm.cellIsOpen && moment(date).startOf('month').isSame(moment(vm.viewDate).startOf('month'))) || cell.events.length === 0) {
+          vm.cellIsOpen = false;
+        } else {
+          vm.cellIsOpen = true;
+          vm.viewDate = date;
+        }
+      }
+
+    };
+
+  });
 
 swof.controller('helpController', ['$scope', '$log', function($scope, $log) {
 

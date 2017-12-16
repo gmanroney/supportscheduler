@@ -6,6 +6,7 @@ process.env.NODE_ENV = 'test';
 // Import models and database connector
 var mongoose = require("mongoose");
 var Engineer = require('../models/engineer');
+var Schedule = require('../models/schedule');
 
 //Require the dev-dependencies
 var chai = require('chai');
@@ -21,7 +22,7 @@ chai.use(require('chai-moment'));
 // Import the functions we are testing
 var ssf = require("../functions/supportSched_functions");
 
-//Our parent block
+//Our parent block for testing engineer
 describe('API: Engineer', () => {
   beforeEach((done) =>  { //Before each test we empty the database
     Engineer.remove({}, (err) => {
@@ -46,7 +47,7 @@ describe('API: Engineer', () => {
   //Test the /POST route
   describe('Testing /POST engineers', () => {
     it('It should create an engineer (all fields required)', (done) => {
-      console.log("one");
+      //console.log("one");
       let engineer =
       {
         empid: "18223",
@@ -60,7 +61,7 @@ describe('API: Engineer', () => {
       .post('/api/engineers')
       .send(engineer)
       .end((err, res) => {
-        console.log("yyyy   ",res.body.message);
+        //console.log("yyyy   ",res.body.message);
         res.should.have.status(200);
         res.body.should.be.a('object');
         res.body.message.should.equal('Engineer record created successfully');
@@ -69,36 +70,6 @@ describe('API: Engineer', () => {
     });
   });
 
-  describe('Testing /POST engineers', () => {
-    it('It should create an engineer (all fields required)', (done) => {
-      console.log("one");
-      let engineer =
-      {
-        empid: "1823323",
-        gender: "M",
-        lname: "Polonei",
-        fname: "Gerard",
-        start: "2011-01-1",
-        dob: "2011-01-1"
-      };
-      chai.request(server)
-      .post('/api/engineers')
-      .send(engineer)
-      .end((err, res) => {
-        console.log("yyyy   ",res.body.message);
-        res.should.have.status(200);
-        res.body.should.be.a('object');
-        res.body.message.should.equal('Engineer record created successfully');
-        done();
-      });
-    });
-  });
-
-//  //Test the /POST route when for an employee with duplicate ID does not complete
-//  describe('Testing /POST engineers (duplicate EmpID) ', () => {
-//  });
-
-  //});
   //Test the /DELETE route
   describe('Testing /DELETE engineers', () => {
     it('It should delete all engineers', (done) => {
@@ -112,6 +83,65 @@ describe('API: Engineer', () => {
      });
    });
   });
+
+  describe('Populating database with records for 10 engineers', () => {
+    it('It should create an engineer (all fields required (as before))', (done) => {
+      //console.log("one");
+      for ( var testid =1001; testid < 1011; testid++ )
+      {
+      let engineer =
+      {
+        empid: testid,
+        gender: "M",
+        lname: "Polonei",
+        fname: "Gerard",
+        start: "2011-01-1",
+        dob: "2011-01-1"
+      };
+      chai.request(server)
+      .post('/api/engineers')
+      .send(engineer)
+      .end((err, res) => {
+        //console.log("yyyy   ",res.body.message);
+        res.should.have.status(200);
+        res.body.should.be.a('object');
+        res.body.message.should.equal('Engineer record created successfully');
+    //    done();
+      });
+    };
+    done();
+    });
+  });
+});
+
+describe('API: Schedule', () => {
+  beforeEach((done) =>  { //Before each test we empty the database of schedule data
+    Engineer.remove({}, (err) => {
+      done();
+    });
+  });
+
+  //Test the /POST route
+  describe('Testing /POST schedules', () => {
+    it('It should create a schedule for 2019 week 11', (done) => {
+     chai.request(server)
+     .post('/api/schedules/2019/11')
+     .end((err, res) => {
+       //console.log("sss");
+       res.should.have.status(200);
+       res.body.should.be.a('object');
+       res.body.message.should.equal('Schedule creation completed successfully for year/period = 20191');
+       done();
+     });
+   });
+  });
+
+
+//  //Test the /POST route when for an employee with duplicate ID does not complete
+//  describe('Testing /POST engineers (duplicate EmpID) ', () => {
+//  });
+
+  //});
 
 });
 
