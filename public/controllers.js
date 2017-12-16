@@ -84,7 +84,7 @@ swof.controller('scheduleController', ['$scope', '$log', '$http', '$filter', fun
 
 }]);
 
-swof.controller('KitchenSinkCtrl', function(moment, alert, calendarConfig) {
+swof.controller('scheduleCalendarDisplay', function(moment, alert, calendarConfig) {
 
   var vm = this;
 

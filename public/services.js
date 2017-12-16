@@ -6,7 +6,7 @@ swof.factory('alert', function($uibModal) {
 
   function show(action, event) {
     return $uibModal.open({
-      templateUrl: 'modalContent.html',
+      templateUrl: 'pages/modalContent.html',
       controller: function() {
         var vm = this;
         vm.action = action;
