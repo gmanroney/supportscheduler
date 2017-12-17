@@ -108,7 +108,7 @@ describe('API: Engineer', () => {
         res.body.message.should.equal('Engineer record created successfully');
     //    done();
       });
-    };
+    }
     done();
     });
   });

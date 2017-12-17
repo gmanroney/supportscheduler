@@ -1,55 +1,25 @@
-    <div class="row">
-      <div class="resizable column" style="margin-top: 5%">
-        <h4>Engineer Schedule</h4>
-        <p>Schedule of work for engineer {{ empschedid }}</p>
-      </div>
-    </div>
-		<!-- schedule LIST -->
-		<div id="schedule-list" class="row">
-        <!-- LOOP OVER THE schedule IN $scope.schedules -->
-        <table class="inline">
-          <tr>
-            <th><a href="" ng-click="orderByField='date'; reverseSort = !reverseSort">Date</a></th>
-            <th>Shift</th>
-          </tr>
-          <tbody ng-repeat="schedule in (filtered = (empidSchedules.data | filter: query | filter: searchKeyword | orderBy: orderByField:reverseSort))">
-            <tr ng-cloak>
-              <td>{{schedule.date | date: 'dd/MM/yy'}}</td>
-              <td><i class="fa" ng-class="{'fa-hourglass-start':schedule.shift==0,'fa-hourglass-end':schedule.shift==1}"></i></td>
-            </tr>
-          </tbody>
-        </table>
-        <p ng-cloak>Records returned = {{filtered.length}}</p>
-        <p><b>Note:</b> Morning shift (08:00-12:30) indicated by <i class="fa fa-hourglass-start" aria-hidden="true"></i> and afternoon shift (12:30-17:00) indicated by <i class="fa fa-hourglass-end" aria-hidden="true"></i> </p>
-        <div ng-controller="EditableDeletableEventsCtrl as vm">
-          <br>
-          <div class="row">
-            <div class="col-md-6 text-center">
-              <div class="btn-group">
-                <button class="btn btn-primary" mwl-date-modifier date="vm.viewDate" decrement="vm.calendarView">Previous</button>
-                <button class="btn btn-default" mwl-date-modifier date="vm.viewDate" set-to-today>Today</button>
-                <button class="btn btn-primary" mwl-date-modifier date="vm.viewDate" increment="vm.calendarView">Next</button>
-              </div>
-            </div>
-            <br class="visible-xs visible-sm">
-            <div class="col-md-6 text-center">
-              <div class="btn-group">
-                <label class="btn btn-primary" ng-model="vm.calendarView" uib-btn-radio="'year'">Year</label>
-                <label class="btn btn-primary" ng-model="vm.calendarView" uib-btn-radio="'month'">Month</label>
-                <label class="btn btn-primary" ng-model="vm.calendarView" uib-btn-radio="'week'">Week</label>
-                <label class="btn btn-primary" ng-model="vm.calendarView" uib-btn-radio="'day'">Day</label>
-              </div>
-            </div>
-          </div>
-          <br>
-          <mwl-calendar
-            events="vm.events"
-            view="vm.calendarView"
-            view-date="vm.viewDate"
-            cell-is-open="vm.cellIsOpen"
-            cell-auto-open-disabled="true">
-          </mwl-calendar>
-        </div>
-      </div>
-      <a href="#!/engineer" class="button button-primary">Return To Engineers</a>
-      <hr></hr>
+<br>
+<h3>Work Schedule For Engineer {{ empschedid }}</h3>
+<p>Have fun! You've got our FULL support!</p>
+<br>
+<div class="container">
+  <a href="#!/engineer" class="button button-primary">Return To Engineers</a>
+</div>
+<div class="container">
+  <div id="schedule-list" class="row">
+  <table>
+    <tr>
+      <th><a href="" ng-click="orderByField='date'; reverseSort = !reverseSort">Date</a></th>
+      <th>Shift</th>
+    </tr>
+    <tbody ng-repeat="schedule in (filtered = (empidSchedules.data | filter: query | filter: searchKeyword | orderBy: orderByField:reverseSort))">
+      <tr ng-cloak>
+        <td>{{schedule.date | date: 'dd/MM/yy'}}</td>
+        <td><i class="fa" ng-class="{'fa-hourglass-start':schedule.shift==0,'fa-hourglass-end':schedule.shift==1}"></i></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <p ng-cloak>Records returned = {{filtered.length}}</p>
+  <p><b>Note:</b> Morning shift (08:00-12:30) indicated by <i class="fa fa-hourglass-start" aria-hidden="true"></i> and afternoon shift (12:30-17:00) indicated by <i class="fa fa-hourglass-end" aria-hidden="true"></i> </p>
+</div>

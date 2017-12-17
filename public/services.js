@@ -3,6 +3,7 @@ swof.service('engSchedService', function() {
 });
 
 swof.factory('alert', function($uibModal) {
+  console.log("ssss");
 
   function show(action, event) {
     return $uibModal.open({

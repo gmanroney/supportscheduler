@@ -90,44 +90,12 @@ swof.controller('scheduleCalendarDisplay',[ '$scope', '$log', '$http', '$filter'
   //These variables MUST be set as a minimum for the calendar to work
   vm.calendarView = 'month';
   vm.viewDate = new Date();
-  var actions = [{
-    label: '<i class=\'glyphicon glyphicon-pencil\'></i>',
-    onClick: function(args) {
-      alert.show('Edited', args.calendarEvent);
-    }
-  }, {
-    label: '<i class=\'glyphicon glyphicon-remove\'></i>',
-    onClick: function(args) {
-      alert.show('Deleted', args.calendarEvent);
-    }
-  }];
 
-//  vm.events = [
-//    {
-//      title: 'An event',
-//      color: calendarConfig.colorTypes.warning,
-//      startsAt: moment().startOf('week').subtract(2, 'days').add(8, 'hours').toDate(),
-//      endsAt: moment().startOf('week').add(1, 'week').add(9, 'hours').toDate(),
-//      draggable: true,
-//      resizable: true
-//    }, {
-//      title: '<i class="glyphicon glyphicon-asterisk"></i> <span class="text-primary">Another event</span>, with a <i>html</i> title',
-//      color: calendarConfig.colorTypes.info,
-//      startsAt: moment().subtract(1, 'day').toDate(),
-//      endsAt: moment().add(5, 'days').toDate(),
-//      draggable: true,
-//      resizable: true
-//    }, {
-//      title: 'This is a really long event title that occurs on every year',
-//      color: calendarConfig.colorTypes.important,
-//      startsAt: moment().startOf('day').add(7, 'hours').toDate(),
-//      endsAt: moment().startOf('day').add(19, 'hours').toDate(),
-//      recursOn: 'year',
-//      draggable: true,
-//      resizable: true
-//    }
-//  ];
-
+  //Get all the data when nagivating to this page. This is ok for starters but will need to be enchanced
+  // - automatically update when schedule is recalculated
+  // - allow user to refresh as/when required without having to navigate away and Back
+  // - allow for retrieving only the data needed in the current view (day/week/month/year)
+  // - allow for retrieving only the data for a particular worker
   $http.get('/api/schedules')
         .then (function(data) {
             $scope.schedules = data;
@@ -144,12 +112,12 @@ swof.controller('scheduleCalendarDisplay',[ '$scope', '$log', '$http', '$filter'
                 var eventColor=calendarConfig.colorTypes.important;
               };
               vm.events.push({
-                title: 'Empid:' + data.data[i]["empid"],
+                title: 'empid:' + data.data[i]["empid"],
                 startsAt: new Date(startsAt),
                 endsAt: new Date(endsAt),
                 color: eventColor,
-                draggable: true,
-                resizable: true
+                draggable: false,
+                resizable: false
               });
             };
 
@@ -159,43 +127,19 @@ swof.controller('scheduleCalendarDisplay',[ '$scope', '$log', '$http', '$filter'
 
   vm.cellIsOpen = true;
 
-  vm.addEvent = function() {
-    vm.events.push({
-      title: 'New event',
-      startsAt: moment().startOf('day').toDate(),
-      endsAt: moment().endOf('day').toDate(),
-      color: calendarConfig.colorTypes.important,
-      draggable: true,
-      resizable: true
-    });
-  };
-
   vm.eventClicked = function(event) {
     alert.show('Clicked', event);
+    console.log("at vmCellclicked :-)");
+
   };
 
-  vm.eventEdited = function(event) {
-    alert.show('Edited', event);
-  };
 
-  vm.eventDeleted = function(event) {
-    alert.show('Deleted', event);
-  };
-
-  vm.eventTimesChanged = function(event) {
-    alert.show('Dropped or resized', event);
-  };
-
-  vm.toggle = function($event, field, event) {
-    $event.preventDefault();
-    $event.stopPropagation();
-    event[field] = !event[field];
-  };
 
   vm.timespanClicked = function(date, cell) {
 
     if (vm.calendarView === 'month') {
       if ((vm.cellIsOpen && moment(date).startOf('day').isSame(moment(vm.viewDate).startOf('day'))) || cell.events.length === 0 || !cell.inMonth) {
+        console.log("at vmCellisopen/month :-)");
         vm.cellIsOpen = false;
       } else {
         vm.cellIsOpen = true;
@@ -203,6 +147,7 @@ swof.controller('scheduleCalendarDisplay',[ '$scope', '$log', '$http', '$filter'
       }
     } else if (vm.calendarView === 'year') {
       if ((vm.cellIsOpen && moment(date).startOf('month').isSame(moment(vm.viewDate).startOf('month'))) || cell.events.length === 0) {
+        console.log("at vmCellisopen/year :-)");
         vm.cellIsOpen = false;
       } else {
         vm.cellIsOpen = true;

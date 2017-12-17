@@ -28,7 +28,7 @@ mongoose.connect('mongodb://' + config.mongodb.host + ':' + config.mongodb.port 
 app.use(express.static(path.join(__dirname, '../public')));
 
 // Added this static path so node modules js files can be accessed
-app.use('/node_modules', express.static(path.join(__dirname, '../node_modules')))
+app.use('/node_modules', express.static(path.join(__dirname, '../node_modules')));
 
 //app.use('node_modules', express.static(__dirname + '/node_modules'));
 

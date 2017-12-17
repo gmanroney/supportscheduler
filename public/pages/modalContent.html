@@ -1,14 +1,10 @@
-
       <div class="modal-header">
-        <h3 class="modal-title">Event action occurred!</h3>
+        <h3 class="modal-title">Shift Details</h3>
       </div>
       <div class="modal-body">
-        <p>Action:
-        <pre>{{ vm.action }}</pre>
-        </p>
-        <p>Event:
-        <pre>{{ vm.event | json }}</pre>
-        </p>
+        <p><b>{{ vm.event['title']}}</b></p>
+        <p><b>Starts At:</b>{{ vm.event['startsAt']}}</p>
+        <p><b>Ends At:</b>{{ vm.event['endsAt']}}</p>
       </div>
       <div class="modal-footer">
         <button class="btn btn-primary" ng-click="$close()">OK</button>
