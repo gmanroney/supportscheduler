@@ -78,10 +78,10 @@ swof.controller('scheduleController', ['$scope', '$log', '$http', '$filter', fun
           $http.post('/api/schedules/'+$scope.selectedYear+'/'+$scope.selectedPeriod)
           .then (function(data) {
             $scope.schedulegen = data;
+            $scope.genScheduleResponse="Completed";
           }, function(data) {
               $log.error();('Error: ' + data);
           })};
-
 }]);
 
 swof.controller('scheduleCalendarDisplay',[ '$scope', '$log', '$http', '$filter', 'moment', 'alert', 'calendarConfig', function($scope, $log, $http, $filter, moment, alert, calendarConfig) {

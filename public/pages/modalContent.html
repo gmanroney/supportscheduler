@@ -3,8 +3,8 @@
       </div>
       <div class="modal-body">
         <p><b>{{ vm.event['title']}}</b></p>
-        <p><b>Starts At:</b>{{ vm.event['startsAt']}}</p>
-        <p><b>Ends At:</b>{{ vm.event['endsAt']}}</p>
+        <p><b>Starts At : </b>{{ vm.event['startsAt'] | date: 'dd/MM/yy hh:mm a' }}</p>
+        <p><b>Ends At : </b>{{ vm.event['endsAt'] | date: 'dd/MM/yy hh:mm a' }}</p>
       </div>
       <div class="modal-footer">
         <button class="btn btn-primary" ng-click="$close()">OK</button>

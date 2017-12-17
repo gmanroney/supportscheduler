@@ -26,3 +26,10 @@
     color: Black;
     background-color: orange;
 }
+
+/* Code to have text to show response to button click on same line */
+input, label{
+  display: inline-block;
+  vertical-align: middle;
+  margin: 10px 0;
+}
