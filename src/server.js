@@ -265,12 +265,19 @@ router.route('/schedules/date/:date')
     {
       // create record
       var query =  getEngineerIDs();
+      var jsonMessage = "Success: Generated new schedule";
+
+      console.log(parseInt(req.params.schedule_period%2),parseInt(req.params.schedule_period));
+
       query.exec(function(err,records)
       {
         if(err) return console.log(err);
         var results = SwfFn.populateCalendar(SwfFn.assignEngineers(records),+
                       req.params.schedule_year,req.params.schedule_period);
-        if (results.length == 0 ) { console.log('Schedule not generated'); }
+        if ( results.length == 0  ) {
+          jsonMessage = "Failed: Start year/week in past";
+        };
+        console.log(jsonMessage);
         for (var count in results)
         {
           // Write record to Mongo using upsert; if records for future date already
@@ -283,8 +290,9 @@ router.route('/schedules/date/:date')
             function (err,res) { if (err) res.send(err); }
           );
         }
+        res.json({message: jsonMessage });
       });
-      res.json({message: 'Schedule creation completed successfully for year/period = ' + req.params.schedule_year + req.params.schedule_period });
+
     })
 
     .get(function(req,res)

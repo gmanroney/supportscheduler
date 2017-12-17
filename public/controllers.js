@@ -53,8 +53,7 @@ swof.controller('scheduleController', ['$scope', '$log', '$http', '$filter', fun
   //console.log($filter('date')(new Date(), 'w'));
   $scope.years = ["2017", "2018", "2019"];
   $scope.selectedYear = "2017";
-  $scope.selectedPeriod = Number(( ($filter('date')(new Date(), 'ww')) %2 == 0) ? ($filter('date')(new Date(), 'ww')) : (($filter('date')(new Date(), 'ww')) - 1));
-
+  
   // when landing on the page, get all schedules and show them
   $http.get('/api/schedules')
         .then (function(data) {
@@ -78,7 +77,8 @@ swof.controller('scheduleController', ['$scope', '$log', '$http', '$filter', fun
           $http.post('/api/schedules/'+$scope.selectedYear+'/'+$scope.selectedPeriod)
           .then (function(data) {
             $scope.schedulegen = data;
-            $scope.genScheduleResponse="Completed";
+            console.log(data);
+            $scope.genScheduleResponse=data.data.message;
           }, function(data) {
               $log.error();('Error: ' + data);
           })};

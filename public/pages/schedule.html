@@ -67,8 +67,8 @@
         <form name="scheduleGenerate">
           <select ng-model="selectedYear" ng-options="x for x in years"></select>
            Start Week (1-51 [odd numbers]):
-          <input ng-model="selectedPeriod" type="number" name="genperiod" min="1" max="51" step="2">
-          <input type="submit" value="Generate" ng-click="genSchedule()"><p>{{ genScheduleResponse }}</p>
-
+          <input ng-model="selectedPeriod" type="number" name="genperiod" placeholder="1" min="1" max="51" step="2" onkeydown="return false">
+          <input type="button" class="click" id="click" value="Generate" ng-click="genSchedule()">
+          <label class="control-label">  {{ genScheduleResponse }}</label>
         </form>
 </div>
