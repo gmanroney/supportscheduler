@@ -38,10 +38,10 @@ swof.factory('engineerService', function($resource)
 });
 
 // service to populate modal page for calendar
-swof.factory('alert', function($uibModal)
-{
-  function show(action, event)
-  {
+swof.factory('alert', function($uibModal) {
+  console.log("ssss");
+
+  function show(action, event) {
     return $uibModal.open({
       templateUrl: 'pages/modalContent.html',
       controller: function() {
@@ -52,8 +52,9 @@ swof.factory('alert', function($uibModal)
       controllerAs: 'vm'
     });
   }
-  return
-  {
+
+  return {
     show: show
   };
+
 });
