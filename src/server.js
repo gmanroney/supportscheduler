@@ -276,7 +276,7 @@ router.route('/schedules/date/:date')
                       req.params.schedule_year,req.params.schedule_period);
         if ( results.length == 0  ) {
           jsonMessage = "Failed: Start year/week in past";
-        };
+        }
         console.log(jsonMessage);
         for (var count in results)
         {
