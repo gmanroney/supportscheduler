@@ -78,7 +78,7 @@ swof.controller('scheduleController', ['$scope', '$log', '$http', '$filter','mom
           $http.post('/api/schedules/'+$scope.selectedYear+'/'+$scope.selectedPeriod)
           .then (function(data) {
             $scope.schedulegen = data;
-            $scope.genScheduleResponse=moment().format('h:mm:ss a') + " " + data.data.message;
+            $scope.genScheduleResponse=moment().format('h:mm:ss a') + "  " + data.data.message;
           }, function(data) {
               $log.error();('Error: ' + data);
           })};
