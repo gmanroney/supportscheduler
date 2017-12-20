@@ -46,13 +46,14 @@ swof.controller('engineerController', ['$scope', '$log', '$http', 'engSchedServi
     };
 }]);
 
-swof.controller('scheduleController', ['$scope', '$log', '$http', '$filter', function($scope, $log, $http, $filter) {
+swof.controller('scheduleController', ['$scope', '$log', '$http', '$filter','moment', function($scope, $log, $http, $filter, moment) {
 
   $scope.name = 'scheduleController';
   $log.info('Controller: '+ $scope.name);
   //console.log($filter('date')(new Date(), 'w'));
   $scope.years = ["2017", "2018", "2019"];
   $scope.selectedYear = "2017";
+  $scope.selectedPeriod = Math.ceil(moment().format('w')) | 1 ;
 
   // when landing on the page, get all schedules and show them
   $http.get('/api/schedules')
