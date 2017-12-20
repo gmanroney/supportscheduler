@@ -43,7 +43,7 @@ swof.factory('alert', function($uibModal) {
 
   function show(action, event) {
     return $uibModal.open({
-      templateUrl: 'pages/modalContent.html',
+      templateUrl: 'pages/engineerShiftModal.html',
       controller: function() {
         var vm = this;
         vm.action = action;

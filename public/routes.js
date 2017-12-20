@@ -12,11 +12,11 @@ swof.config(function ($routeProvider) {
         controller: 'engineerController'
     })
 
-    .when('/engineerSchedule', {
-        templateUrl: 'pages/engineerSchedule.html',
+    .when('/engineerScheduleTable', {
+        templateUrl: 'pages/engineerScheduleTable.html',
         controller: 'engineerScheduleController'
     })
-    
+
     .when('/schedule', {
         templateUrl: 'pages/schedule.html',
         controller: 'scheduleController'
