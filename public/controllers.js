@@ -21,25 +21,25 @@ swof.controller('engineerScheduleController', ['$scope', '$log', '$http', 'engSc
 
 }]);
 
-swof.controller('engineerController', ['$scope', '$log', '$http',  'engSchedService', function($scope, $log, $http, engSchedService ) {
+swof.controller('engineerController', ['$scope', '$log', '$http', 'engSchedService', 'engineerService', function($scope, $log, $http, engSchedService, engineerService ) {
 
     $scope.name = 'engineerController';
     $log.info('Controller: '+ $scope.name);
 
+    // use of $watch to assign empid to service shared with other controller so value can be passed between both
     $scope.empschedid = engSchedService.empschedid;
     $scope.$watch('empschedid', function() {
       engSchedService.empschedid = $scope.empschedid;
     });
 
-    // when landing on the page, get all engineers and show them
-    $http.get('/api/engineers')
-        .then (function(data) {
-            $scope.engineers = data;
-            $scope.engineersCount = data.data.length;
-        }, function(data) {
-          $log.error();('Error: ' + data);
-      });
+    // using of factory service and ngresource to manage RESTful calls makes code cleaner
+    // and easier to maintain as one location where url's are defined
+    engineerService.query().$promise.then(function(data)
+    {
+      $scope.engineers = data;
+    });
 
+    // get value of empid when button is clicked
     $scope.getEmpidSchedule = function(userid)
     {
       $scope.empschedid = userid;
@@ -53,7 +53,7 @@ swof.controller('scheduleController', ['$scope', '$log', '$http', '$filter', fun
   //console.log($filter('date')(new Date(), 'w'));
   $scope.years = ["2017", "2018", "2019"];
   $scope.selectedYear = "2017";
-  
+
   // when landing on the page, get all schedules and show them
   $http.get('/api/schedules')
         .then (function(data) {

@@ -20,7 +20,7 @@ app.use(bodyParser.json());
 var port = process.env.PORT || 3000;
 
 // Connecte to MongoDB
-mongoose.Promise = global.Promise;
+//mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://' + config.mongodb.host + ':' + config.mongodb.port + '/' + config.mongodb.db ,{ useMongoClient: true });
 
 // Add path to static content (HTML homepage) for Single Page Application (SPA) that will serve SWF content

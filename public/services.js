@@ -1,11 +1,47 @@
+// service to pass empid between engineerController and engineerScheduleController
 swof.service('engSchedService', function() {
-  this.empschedid="999";
+  this.empschedid="";
 });
 
-swof.factory('alert', function($uibModal) {
-  console.log("ssss");
+// service to manage RESTful calls for engineer data object
+swof.factory('engineerService', function($resource)
+{
+  var data = $resource('/api/engineers/:empid',{empid: "@empid"},
+  {
+    'get':
+    {
+      method:'GET'
+    },
+    'save':
+    {
+      method:'POST'
+    },
+    'query':
+    {
+      method:'GET',
+      transformResponse: function(data)
+      {
+        return angular.fromJson(data);
+      },
+      isArray:true
+    },
+    'remove':
+    {
+      method:'DELETE'
+    },
+    'delete':
+    {
+      method:'DELETE'
+    }
+  });
+  return data;
+});
 
-  function show(action, event) {
+// service to populate modal page for calendar
+swof.factory('alert', function($uibModal)
+{
+  function show(action, event)
+  {
     return $uibModal.open({
       templateUrl: 'pages/modalContent.html',
       controller: function() {
@@ -16,9 +52,8 @@ swof.factory('alert', function($uibModal) {
       controllerAs: 'vm'
     });
   }
-
-  return {
+  return
+  {
     show: show
   };
-
 });

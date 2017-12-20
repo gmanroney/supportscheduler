@@ -15,7 +15,7 @@
       <th>Last Name</th>
       <th>Work Start Date</th>
     </tr>
-    <tbody ng-repeat="engineer in (filtered = (engineers.data | filter: query | filter: searchKeyword | orderBy: orderByField:reverseSort))">
+    <tbody ng-repeat="engineer in (filtered = (engineers | filter: query | filter: searchKeyword | orderBy: orderByField:reverseSort))">
       <tr>
         <td>{{engineer.empid}}</td>
         <td>{{engineer.fname}}</td>
