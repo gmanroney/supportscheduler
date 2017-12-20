@@ -1,0 +1,16 @@
+<br>
+<h3>Work! Work! Work! Work! Work!</h3>
+<p>See when an engineer was, is and will be scheduled in the future. The default schedule provided is for the current period. You can select an alternative period by selecting the year and period number below.</p>
+<br>
+<my-schedulecdr></my-schedulecdr>
+<h3>Generate</h3>
+<h4>Generate schedule for future periods</h4>
+<p>Select year and week start period to generate a schedule for future support slots. Previously generated values will be lost. You cannot generate  a scheule for periods in the past or the current period we are in.</p>
+        <form name="scheduleGenerate">
+          <select ng-model="selectedYear" ng-options="x for x in years"></select>
+           Start Week (1-51 [odd numbers]):
+          <input ng-model="selectedPeriod" type="number" name="genperiod" placeholder="1" min="1" max="51" step="2" onkeydown="return false">
+          <input type="button" class="click" id="click" value="Generate" ng-click="genSchedule()">
+          <label class="control-label">  {{ genScheduleResponse }}</label>
+        </form>
+</div>

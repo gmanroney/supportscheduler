@@ -11,3 +11,10 @@ swof.directive('myScheduletbl', function(){
     templateUrl: 'pages/engineerScheduleTable.tpl.html',
   };
 });
+
+swof.directive('mySchedulecdr', function(){
+  return {
+    restrict: 'EA',
+    templateUrl: 'pages/engineerScheduleCalendar.tpl.html',
+  };
+});

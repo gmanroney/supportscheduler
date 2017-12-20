@@ -39,11 +39,10 @@ swof.factory('engineerService', function($resource)
 
 // service to populate modal page for calendar
 swof.factory('alert', function($uibModal) {
-  console.log("ssss");
 
   function show(action, event) {
     return $uibModal.open({
-      templateUrl: 'pages/engineerShiftModal.html',
+      templateUrl: 'pages/engineers_schedule_one_modal.html',
       controller: function() {
         var vm = this;
         vm.action = action;

@@ -8,17 +8,17 @@ swof.config(function ($routeProvider) {
     })
 
     .when('/engineer', {
-        templateUrl: 'pages/engineer.html',
+        templateUrl: 'pages/engineers_all.html',
         controller: 'engineerController'
     })
 
     .when('/engineerScheduleTable', {
-        templateUrl: 'pages/engineerScheduleTable.html',
+        templateUrl: 'pages/engineers_schedule_one.html',
         controller: 'engineerScheduleController'
     })
 
     .when('/schedule', {
-        templateUrl: 'pages/schedule.html',
+        templateUrl: 'pages/engineers_schedule_all.html',
         controller: 'scheduleController'
     })
 
