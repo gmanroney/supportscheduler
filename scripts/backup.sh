@@ -1,13 +1,14 @@
 #!/bin/bash
+set -x
 
-# Parameters
+# Configuration Parameters
 TIMESTAMP=`date +%Y%M%d%H%m`
 
-# Directories
+# Make Backup Directory
 BACKUP_DIR="../backup/${TIMESTAMP}"
 mkdir ${BACKUP_DIR}
 
-# Backup
+# Backup Application Directories
 cp -rv ../README.md ${BACKUP_DIR}
 cp -rv ../config ${BACKUP_DIR}
 cp -rv ../controller ${BACKUP_DIR}
