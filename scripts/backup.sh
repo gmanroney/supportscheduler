@@ -16,7 +16,6 @@ mkdir -p ${BACKUP_DIR}
 # Backup Application Directories
 cp -rv README.md ${BACKUP_DIR}
 cp -rv config ${BACKUP_DIR}
-cp -rv controller ${BACKUP_DIR}
 cp -rv dist ${BACKUP_DIR}
 cp -rv functions ${BACKUP_DIR}
 cp -rv models ${BACKUP_DIR}
