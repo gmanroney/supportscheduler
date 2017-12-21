@@ -1,5 +1,5 @@
 #!/bin/bash
-# Set verbose logging
+# Set Verbose logging
 set -x
 
 # Configuration Parameters
