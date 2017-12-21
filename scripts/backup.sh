@@ -1,4 +1,5 @@
 #!/bin/bash
+
 # Set Verbose Logging
 set -x
 
