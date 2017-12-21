@@ -3,7 +3,7 @@
 set -x
 
 # Configuration Parameters
-TIMESTAMP=`date +%Y%M%d%H%m`
+TIMESTAMP=`date +%Y.%m.%d.%H.%M.%S`
 
 # Log start of backup
 echo "`date`:$0: Backup started" >> logs/backup.log
