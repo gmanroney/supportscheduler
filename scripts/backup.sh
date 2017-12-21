@@ -7,7 +7,6 @@ TIMESTAMP=`date +%Y%M%d%H%m`
 
 # Make Backup Directory
 BACKUP_DIR="../backup/${TIMESTAMP}"
-
 mkdir ${BACKUP_DIR}
 
 # Backup Application Directories
