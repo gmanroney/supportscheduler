@@ -10,6 +10,14 @@ nodemon server.js
 3. csvtojson refdata.csv > refdata.json
 4. mongoimport --db swf --collection refdata --file refdata.json --jsonArray --type json --fields date.date(),isholiday.boolean(),title.string(),isweekend.boolean(),weeknumber.int32() --columnsHaveTypes --verbose
 mongoimport --db swf --collection refdata --file refdata.json --jsonArray --type json --verbose --columnsHaveTypes
-
-
 4. mongoimport --db swf --collection refdata --file refdata.csv --type csv --fields date.date(),isholiday.boolean(),title.string(),isweekend.boolean(),weeknumber.int32() --columnsHaveTypes --verbose
+
+# Auto-deploy
+Use instructions to auto-deploy to remote server on "push" found at https://gist.github.com/thomasfr/9691385
+Line 53 of the post-push script needs to have /sbin added so it reads /sbin/ip.
+Scripts for managing deployment should be in a different repository. Deploying scripts which are used in the deployment is confusing and not very helpful.
+
+### -> push + deploy :  git push production master
+### -> see remote paths :  git remote -v
+### -> delete remote :  git remove remote
+
