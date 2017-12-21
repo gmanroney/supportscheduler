@@ -10,8 +10,8 @@ swof.controller('engineerScheduleController', ['$scope', '$log', '$http', 'engSc
     $scope.name = 'engineerScheduleController';
     $scope.empschedid = engSchedService.empschedid;
     $log.info('Controller: '+ $scope.name);
-
-    $http.get('/api/schedules/empid/'+ $scope.empschedid)
+    
+    $http.get('/api/schedules/'+ $scope.empschedid)
     .then (function(data)
     {
       $scope.empidSchedules = data;

@@ -135,6 +135,32 @@ router.route('/engineers')
     });
   });
 
+// get or delete engineer based on employee ID
+router.route('/engineers/:empid')
+    .get(function(req,res)
+    {
+      Engineer.find({empid:req.params.empid},function(err,engineer)
+      {
+        if (err)
+        {
+          res.send(err);
+        }
+        res.json(engineer);
+      });
+    })
+
+    .delete(function(req,res)
+    {
+      Engineer.remove({empid:req.params.empid},function(err,engineer)
+      {
+        if (err)
+        {
+          res.send(err);
+        }
+        res.json({ message: "Engineer record deleted successfully EmployeeID: ", empid:req.params.empid});
+      });
+    });
+
 // get engineer based on mongo ID
 router.route('/engineers/id/:engineer_id')
 
@@ -166,34 +192,7 @@ router.route('/engineers/gender/:gender')
     });
   });
 
-// get or delete engineer based on employee ID
-router.route('/engineers/:empid')
-  .get(function(req,res)
-  {
-    Engineer.find({empid:req.params.empid},function(err,engineer)
-    {
-      if (err)
-      {
-        res.send(err);
-      }
-      res.json(engineer);
-    });
-  })
-
-  .delete(function(req,res)
-  {
-    Engineer.remove({empid:req.params.empid},function(err,engineer)
-    {
-      if (err)
-      {
-        res.send(err);
-      }
-      res.json({ message: "Engineer record deleted successfully EmployeeID: ", empid:req.params.empid});
-    });
-  });
-
 // ------------------------- API for Schedule --------------------- //
-
 // get entire schedule
 router.route('/schedules/')
   .get(function(req,res)
@@ -209,6 +208,21 @@ router.route('/schedules/')
     });
   });
 
+// get engineer based on employ ee ID
+router.route('/schedules/:empid')
+  .get(function(req,res)
+  {
+      Schedule.find({empid:req.params.empid},function(err,schedule)
+      {
+        if (err)
+        {
+          res.send(err);
+        }
+        res.json(schedule);
+        console.log('Schedule GET (empid) Completed');
+      });
+  });
+
 // get schedule based on mongo ID
 router.route('/schedules/id/:schedule_id')
   .get(function(req,res)
@@ -221,21 +235,6 @@ router.route('/schedules/id/:schedule_id')
       }
       res.json(schedule);
       console.log('Schedule GET (schedule_id) Completed');
-    });
-  });
-
-// get engineer based on employ ee ID
-router.route('/schedules/empid/:empid')
-  .get(function(req,res)
-  {
-    Schedule.find({empid:req.params.empid},function(err,schedule)
-    {
-      if (err)
-      {
-        res.send(err);
-      }
-      res.json(schedule);
-      console.log('Schedule GET (empid) Completed');
     });
   });
 

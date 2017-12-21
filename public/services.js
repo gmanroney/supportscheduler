@@ -12,10 +12,6 @@ swof.factory('engineerService', function($resource)
     {
       method:'GET'
     },
-    'save':
-    {
-      method:'POST'
-    },
     'query':
     {
       method:'GET',
@@ -24,14 +20,24 @@ swof.factory('engineerService', function($resource)
         return angular.fromJson(data);
       },
       isArray:true
-    },
-    'remove':
+    }
+  });
+  return data;
+});
+
+// service to manage RESTful calls for engineer data object
+swof.factory('scheduleService', function($resource)
+{
+  var data = $resource('/api/schedules/:empid',{empid: "@empid"},
+  {
+    'query':
     {
-      method:'DELETE'
-    },
-    'delete':
-    {
-      method:'DELETE'
+      method:'GET',
+      transformResponse: function(data)
+      {
+        return angular.fromJson(data);
+      },
+      isArray:true
     }
   });
   return data;
