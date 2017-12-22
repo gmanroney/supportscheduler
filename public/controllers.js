@@ -56,7 +56,7 @@ swof.controller('scheduleController', ['$scope', '$log', '$http', '$filter','mom
 
   $scope.genSchedule = function() {
 
-          $http.post('/api/schedules/'+$scope.selectedYear+'/'+$scope.selectedPeriod)
+          $http.post('/api/schedules/period/'+$scope.selectedYear+'/'+$scope.selectedPeriod)
           .then (function(data) {
             $scope.schedulegen = data;
             $scope.genScheduleResponse=moment().format('h:mm:ss a') + " " + data.data.message;
@@ -83,7 +83,7 @@ swof.controller('scheduleCalendarDisplay',[ '$scope', '$log', '$http', '$filter'
 
   $scope.queryParams={empid: "6123"};
   $scope.queryParams="";
-  console.log($scope.queryParams);
+
   scheduleService.query($scope.queryParams).$promise.then(function(data)
   {
             $scope.schedules = data;

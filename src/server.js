@@ -258,7 +258,7 @@ router.route('/schedules/date/:date')
   // - peroiod starts on week schedule_period and extends for 2 weeks
   // - period must be an odd number and includes 1 e.g. 1,3,5,7 etc.
 
-  router.route('/schedules/:schedule_year/:schedule_period')
+  router.route('/schedules/period/:schedule_year/:schedule_period')
 
     .post(function(req,res)
     {
