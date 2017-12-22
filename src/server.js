@@ -219,7 +219,7 @@ router.route('/schedules/:empid')
           res.send(err);
         }
         res.json(schedule);
-        console.log('Schedule GET (empid) Completed');
+        console.log('Schedule GET (empid) Completed for employee with ID:' + req.params.empid);
       });
   });
 

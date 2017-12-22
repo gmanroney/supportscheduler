@@ -28,11 +28,14 @@ swof.factory('engineerService', function($resource)
 // service to manage RESTful calls for engineer data object
 swof.factory('scheduleService', function($resource)
 {
+  //console.log("empid = ", params);
+  //var data = $resource('/api/schedules/:empid',{empid: "@empid"},
   var data = $resource('/api/schedules/:empid',{empid: "@empid"},
   {
     'query':
     {
-      method:'GET',
+      method: 'GET',
+      params: {},
       transformResponse: function(data)
       {
         return angular.fromJson(data);

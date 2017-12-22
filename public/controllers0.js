@@ -7,7 +7,7 @@ swof.controller('aboutController', ['$scope', '$log', function($scope, $log) {
 
 swof.controller('engineerScheduleController', ['$scope', '$log', '$http', 'engSchedService', function($scope, $log, $http, engSchedService ) {
 
-    $scope.name = 'engineerScheduleController::extract list of schedules for a particular engineer';
+    $scope.name = 'engineerScheduleController';
     $scope.empschedid = engSchedService.empschedid;
     $log.info('Controller: '+ $scope.name);
 
@@ -23,7 +23,7 @@ swof.controller('engineerScheduleController', ['$scope', '$log', '$http', 'engSc
 
 swof.controller('engineerController', ['$scope', '$log', '$http', 'engSchedService', 'engineerService', function($scope, $log, $http, engSchedService, engineerService ) {
 
-    $scope.name = 'engineerController::extract list of all engineers';
+    $scope.name = 'engineerController';
     $log.info('Controller: '+ $scope.name);
 
     // use of $watch to assign empid to service shared with other controller so value can be passed between both
@@ -48,11 +48,22 @@ swof.controller('engineerController', ['$scope', '$log', '$http', 'engSchedServi
 
 swof.controller('scheduleController', ['$scope', '$log', '$http', '$filter','moment', 'scheduleService', function($scope, $log, $http, $filter, moment, scheduleService) {
 
-  $scope.name = 'scheduleController::set default values and provide function to generate new schedule';
+  $scope.name = 'scheduleController!!!!!!';
   $log.info('Controller: '+ $scope.name);
+  //console.log($filter('date')(new Date(), 'w'));
   $scope.years = ["2017", "2018", "2019"];
   $scope.selectedYear = "2017";
   $scope.selectedPeriod = Math.ceil(moment().format('w')) | 1 ;
+
+  scheduleService.query().$promise.then(function(data)
+  {
+    $scope.schedules = data;
+//    for (var i=0; i < data.length; i++ ) {
+//      var startsAt=moment(data[i]["date"]).add(9,'hour');
+//      console.log(data[i]["date"],startsAt);
+//    };
+
+  });
 
   $scope.genSchedule = function() {
 
@@ -67,7 +78,7 @@ swof.controller('scheduleController', ['$scope', '$log', '$http', '$filter','mom
 
 swof.controller('scheduleCalendarDisplay',[ '$scope', '$log', '$http', '$filter', 'moment', 'alert', 'calendarConfig', 'scheduleService', function($scope, $log, $http, $filter, moment, alert, calendarConfig, scheduleService) {
 
-  $scope.name = 'scheduleCalendarDisplay::display schedules in calendar format for all workers';
+  $scope.name = 'scheduleCalendarDisplay';
   $log.info('Controller: '+ $scope.name);
 
   var vm = this;
@@ -80,27 +91,23 @@ swof.controller('scheduleCalendarDisplay',[ '$scope', '$log', '$http', '$filter'
   // - allow user to refresh as/when required without having to navigate away and Back
   // - allow for retrieving only the data needed in the current view (day/week/month/year)
   // - allow for retrieving only the data for a particular worker
-
-  $scope.queryParams={empid: "6123"};
-  $scope.queryParams="";
-  console.log($scope.queryParams);
-  scheduleService.query($scope.queryParams).$promise.then(function(data)
-  {
+  $http.get('/api/schedules/')
+        .then (function(data) {
             $scope.schedules = data;
-            $scope.schedulesCount = data.length;
-            for (var i=0; i < data.length; i++ ) {
-              if ( data[i].shift == 0 )
+            $scope.schedulesCount = data.data.length;
+            for (var i=0; i < data.data.length; i++ ) {
+              if ( data.data[i].shift == 0 )
               {
-                var startsAt=moment(data[i]["date"]).add(9,'hour');
+                var startsAt=moment(data.data[i]["date"]).add(9,'hour');
                 var endsAt=moment(startsAt).add(4,'hour');
                 var eventColor=calendarConfig.colorTypes.warning;
               } else {
-                var startsAt=moment(data[i]["date"]).add(14,'hour');
+                var startsAt=moment(data.data[i]["date"]).add(14,'hour');
                 var endsAt=moment(startsAt).add(4,'hour');
                 var eventColor=calendarConfig.colorTypes.important;
               };
               vm.events.push({
-                title: 'empid:' + data[i]["empid"],
+                title: 'empid:' + data.data[i]["empid"],
                 startsAt: new Date(startsAt),
                 endsAt: new Date(endsAt),
                 color: eventColor,
@@ -108,6 +115,7 @@ swof.controller('scheduleCalendarDisplay',[ '$scope', '$log', '$http', '$filter'
                 resizable: false
               });
             };
+
         }, function(data) {
           $log.error();('Error: ' + data);
         });
@@ -116,7 +124,11 @@ swof.controller('scheduleCalendarDisplay',[ '$scope', '$log', '$http', '$filter'
 
   vm.eventClicked = function(event) {
     alert.show('Clicked', event);
+    console.log("at vmCellclicked :-)");
+
   };
+
+
 
   vm.timespanClicked = function(date, cell) {
 
@@ -148,3 +160,11 @@ swof.controller('helpController', ['$scope', '$log', function($scope, $log) {
   $log.info('Controller: '+ $scope.name);
 
 }]);
+
+swof.controller('todo', function($scope){
+  $scope.todo = [
+    {name: 'Create a custom directive', completed: true},
+    {name: 'Learn about restrict', completed: true},
+    {name: 'Master scopes', completed: false}
+  ];
+});
