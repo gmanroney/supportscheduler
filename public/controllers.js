@@ -11,8 +11,9 @@ swof.controller('engineerScheduleController', ['$scope', '$log', '$http', 'engSc
     $scope.empschedid = engSchedService.empschedid;
     $log.info('Controller: '+ $scope.name);
 
-    $http.get('/api/schedules/'+ $scope.empschedid)
-    .then (function(data)
+    $scope.queryParams={empid: $scope.empschedid};
+
+    scheduleService.query($scope.queryParams).$promise.then(function(data)
     {
       $scope.empidSchedules = data;
     }, function(data) {
