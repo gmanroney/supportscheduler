@@ -38,6 +38,8 @@ swof.controller('engineerController', ['$scope', '$log', '$http', 'engSchedServi
     engineerService.query().$promise.then(function(data)
     {
       $scope.engineers = data;
+    }, function(data) {
+      $log.error();('Error: ' + data);
     });
 
     // get value of empid when button is clicked
