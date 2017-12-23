@@ -5,7 +5,7 @@ swof.controller('aboutController', ['$scope', '$log', function($scope, $log) {
 
 }]);
 
-swof.controller('engineerScheduleController', ['$scope', '$log', '$http', 'engSchedService', 'scheduleService', function($scope, $log, $http, engSchedService, scheduleService ) {
+swof.controller('engineerScheduleController', ['$scope', '$log', 'engSchedService', 'scheduleService', function($scope, $log, engSchedService, scheduleService ) {
 
     $scope.name = 'engineerScheduleController::extract list of schedules for a particular engineer';
     $scope.empschedid = engSchedService.empschedid;
@@ -20,7 +20,7 @@ swof.controller('engineerScheduleController', ['$scope', '$log', '$http', 'engSc
 
 }]);
 
-swof.controller('engineerController', ['$scope', '$log', '$http', 'engSchedService', 'engineerService', function($scope, $log, $http, engSchedService, engineerService ) {
+swof.controller('engineerController', ['$scope', '$log', 'engSchedService', 'engineerService', function($scope, $log, engSchedService, engineerService ) {
 
     $scope.name = 'engineerController::extract list of all engineers';
     $log.info('Controller: '+ $scope.name);
@@ -67,7 +67,7 @@ swof.controller('scheduleController', ['$scope', '$log', '$http', '$filter','mom
 
 }]);
 
-swof.controller('scheduleCalendarDisplay',[ '$scope', '$log', '$http', '$filter', 'moment', 'alert', 'calendarConfig', 'scheduleService', function($scope, $log, $http, $filter, moment, alert, calendarConfig, scheduleService) {
+swof.controller('scheduleCalendarDisplay',[ '$scope', '$log', '$filter', 'moment', 'alert', 'calendarConfig', 'scheduleService', function($scope, $log, $filter, moment, alert, calendarConfig, scheduleService) {
 
   $scope.name = 'scheduleCalendarDisplay::display schedules in calendar format for all workers';
   $log.info('Controller: '+ $scope.name);
