@@ -5,15 +5,13 @@ swof.controller('aboutController', ['$scope', '$log', function($scope, $log) {
 
 }]);
 
-swof.controller('engineerScheduleController', ['$scope', '$log', '$http', 'engSchedService', function($scope, $log, $http, engSchedService ) {
+swof.controller('engineerScheduleController', ['$scope', '$log', '$http', 'engSchedService', 'scheduleService', function($scope, $log, $http, engSchedService, scheduleService ) {
 
     $scope.name = 'engineerScheduleController::extract list of schedules for a particular engineer';
     $scope.empschedid = engSchedService.empschedid;
     $log.info('Controller: '+ $scope.name);
 
-    $scope.queryParams={empid: $scope.empschedid};
-
-    scheduleService.query($scope.queryParams).$promise.then(function(data)
+    scheduleService.query({empid: $scope.empschedid }).$promise.then(function(data)
     {
       $scope.empidSchedules = data;
     }, function(data) {
@@ -57,15 +55,16 @@ swof.controller('scheduleController', ['$scope', '$log', '$http', '$filter','mom
   $scope.selectedYear = "2017";
   $scope.selectedPeriod = Math.ceil(moment().format('w')) | 1 ;
 
-  $scope.genSchedule = function() {
+  $scope.genSchedule = function()
+  {
+    $http.post('/api/schedules/period/'+$scope.selectedYear+'/'+$scope.selectedPeriod)
+    .then (function(data) {
+      $scope.schedulegen = data;
+      $scope.genScheduleResponse=moment().format('h:mm:ss a') + " " + data.data.message;
+    }, function(data) {
+      $log.error();('Error: ' + data);
+    })};
 
-          $http.post('/api/schedules/period/'+$scope.selectedYear+'/'+$scope.selectedPeriod)
-          .then (function(data) {
-            $scope.schedulegen = data;
-            $scope.genScheduleResponse=moment().format('h:mm:ss a') + " " + data.data.message;
-          }, function(data) {
-              $log.error();('Error: ' + data);
-          })};
 }]);
 
 swof.controller('scheduleCalendarDisplay',[ '$scope', '$log', '$http', '$filter', 'moment', 'alert', 'calendarConfig', 'scheduleService', function($scope, $log, $http, $filter, moment, alert, calendarConfig, scheduleService) {

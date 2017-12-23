@@ -1,11 +1,10 @@
-<div class="container">
-  <div id="schedule-list" class="row">
+<div id="schedule-list" class="row">
   <table>
     <tr>
       <th><a href="" ng-click="orderByField='date'; reverseSort = !reverseSort">Date</a></th>
       <th>Shift</th>
     </tr>
-    <tbody ng-repeat="schedule in (filtered = (empidSchedules.data | filter: query | filter: searchKeyword | orderBy: orderByField:reverseSort))">
+    <tbody ng-repeat="schedule in (filtered = ( empidSchedules | filter: query | filter: searchKeyword | orderBy: orderByField:reverseSort))">
       <tr ng-cloak>
         <td>{{schedule.date | date: 'dd/MM/yy'}}</td>
         <td><i class="fa" ng-class="{'fa-hourglass-start':schedule.shift==0,'fa-hourglass-end':schedule.shift==1}"></i></td>
@@ -15,4 +14,3 @@
   </div>
   <p ng-cloak>Records returned = {{filtered.length}}</p>
   <p><b>Note:</b> Morning shift (08:00-12:30) indicated by <i class="fa fa-hourglass-start" aria-hidden="true"></i> and afternoon shift (12:30-17:00) indicated by <i class="fa fa-hourglass-end" aria-hidden="true"></i> </p>
-</div>
