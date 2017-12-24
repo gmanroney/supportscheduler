@@ -61,7 +61,7 @@ router.use(function(req,res,next) {
 });
 
 // Test Route (to see if everything is running)
-router.get('/', function(req,res) {
+router.get('/', function(req,res) {db.engineers.getEmployeeIDChecknct( "empid" );
   res.json({message: 'Welcome to the API'});
 });
 
@@ -90,9 +90,9 @@ router.route('/engineers')
     engineer.start = req.body.start;
 
     Engineer.distinct('empid', function(err, empids) {
-      //console.log(empids);
+      console.log(empids);
       var containsCheck = getEmployeeIDCheck(empids,engineer.empid);
-      //console.log("check  = ", containsCheck, empids.length);
+      console.log("check  = ", containsCheck, empids.length);
       if ( ! containsCheck )
       {
         // if no employee in the database has the same empid then save record
