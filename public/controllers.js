@@ -47,20 +47,19 @@ swof.controller('engineerController', ['$scope', '$log', 'engSchedService', 'eng
     };
 }]);
 
-swof.controller('scheduleController', ['$scope', '$log', '$http', '$filter','moment', 'scheduleService', function($scope, $log, $http, $filter, moment, scheduleService) {
+swof.controller('scheduleController', ['$scope', '$log', '$http', '$filter','moment', 'scheduleServicePeriod', function($scope, $log, $http, $filter, moment, scheduleServicePeriod) {
 
   $scope.name = 'scheduleController::set default values and provide function to generate new schedule';
   $log.info('Controller: '+ $scope.name);
-  $scope.years = ["2017", "2018", "2019"];
+  $scope.years = ["2017", "2018", "2019","2020","2021","2022"];
   $scope.selectedYear = "2017";
   $scope.selectedPeriod = Math.ceil(moment().format('w')) | 1 ;
 
   $scope.genSchedule = function()
   {
-    $http.post('/api/schedules/period/'+$scope.selectedYear+'/'+$scope.selectedPeriod)
-    .then (function(data) {
+    scheduleServicePeriod.post({ s_year: $scope.selectedYear, s_period: $scope.selectedPeriod }).$promise.then(function(data){
       $scope.schedulegen = data;
-      $scope.genScheduleResponse=moment().format('h:mm:ss a') + " " + data.data.message;
+      $scope.genScheduleResponse=moment().format('h:mm:ss a') + " " + data.message;
     }, function(data) {
       $log.error();('Error: ' + data);
     })};

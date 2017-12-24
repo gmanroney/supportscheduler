@@ -47,15 +47,11 @@ swof.factory('scheduleService', function($resource)
 // service to manage RESTful calls for engineer data object
 swof.factory('scheduleServicePeriod', function($resource)
 {
-  //console.log("empid = ", params);
-  //var data = $resource('/api/schedules/:empid',{empid: "@empid"},
   var data = $resource('/api/schedules/period/:s_year/:s_period',{s_year: "@s_year",s_period: "@s_period" },
   {
     'post':
     {
-      method: 'POST',
-      params: {},
-      isArray:true
+      method: 'POST'
     }
   });
   return data;
